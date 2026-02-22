@@ -1,6 +1,9 @@
 package dinh.hien.identity_service.application.usecase.login;
 
 
+import dinh.hien.identity_service.application.service.token.ITokenService;
+import dinh.hien.identity_service.application.service.token.TokenPayload;
+import dinh.hien.identity_service.application.service.token.TokenType;
 import dinh.hien.identity_service.domain.exception.DError;
 import dinh.hien.identity_service.domain.exception.DomainException;
 import dinh.hien.identity_service.domain.user.IUserRepository;
@@ -14,16 +17,26 @@ import org.springframework.stereotype.Service;
 public class UserLoginUseCase {
     private final IUserRepository userRepository;
     private final PasswordHasher passwordHasher;
-    public LoginResult userLogin(LoginCommand loginCommand){
+    private final ITokenService tokenService;
+
+    public LoginResult loginUser(LoginCommand loginCommand){
         String username= loginCommand.getUsername();
         String rawPassword= loginCommand.getPassword();
         User user=userRepository.findByUsername(username)
                 .orElseThrow(()->new DomainException(DError.USER_NOT_EXISTED));
-
         // check password
         user.authenticatePassword(rawPassword,passwordHasher);
-
         // return jwt
-        return null;
+        TokenPayload payload = TokenPayload.builder()
+                .id(user.getId().getValue().toString())
+                .username(user.getUsername())
+                .role(user.getRole().getName())
+                .build();
+        String accessToken=tokenService.generate(payload, TokenType.ACCESS);
+        String refreshToken=tokenService.generate(payload, TokenType.REFRESH);
+        return LoginResult.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
     }
 }

@@ -1,6 +1,7 @@
 package dinh.hien.identity_service.application.service.token;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -8,9 +9,9 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class TokenPayload {
     private String id;
     private String username;
-    private String email;
     private String role;
 }

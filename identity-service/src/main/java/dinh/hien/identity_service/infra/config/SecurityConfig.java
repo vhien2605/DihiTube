@@ -1,5 +1,9 @@
 package dinh.hien.identity_service.infra.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import dinh.hien.identity_service.infra.config.authHandlers.CustomAccessDeniedHandler;
+import dinh.hien.identity_service.infra.config.authHandlers.CustomAuthenticationEntryPoint;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -12,7 +16,18 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtGra
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
+@RequiredArgsConstructor
 public class SecurityConfig {
+    private final CustomJwtDecoder customJwtDecoder;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
+
+
+    private final String[] WHITE_LIST= {
+            "/auth/**"
+    };
+
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -25,21 +40,22 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(requests -> requests
-                        .anyRequest().permitAll()
-                ).build();
-//                .oauth2ResourceServer(oauth2 -> oauth2
-//                        .jwt(config -> config
-//                                .decoder(customJwtDecoder)
-//                                .jwtAuthenticationConverter(jwtAuthenticationConverter())
-//                        )
-//                        .accessDeniedHandler(customAccessDeniedHandler)
-//                        .authenticationEntryPoint(customAuthenticationEntryPoint)
-//                )
-//                .exceptionHandling(
-//                        requests -> requests
-//                                .accessDeniedHandler(customAccessDeniedHandler)
-//                                .authenticationEntryPoint(customAuthenticationEntryPoint))
-//                .build();
+                        .requestMatchers(WHITE_LIST).permitAll()
+                        .anyRequest().authenticated()
+                )
+                .oauth2ResourceServer(oauth2 -> oauth2
+                        .jwt(config -> config
+                                .decoder(customJwtDecoder)
+                                .jwtAuthenticationConverter(jwtAuthenticationConverter())
+                        )
+                        .accessDeniedHandler(customAccessDeniedHandler)
+                        .authenticationEntryPoint(customAuthenticationEntryPoint)
+                )
+                .exceptionHandling(
+                        requests -> requests
+                                .accessDeniedHandler(customAccessDeniedHandler)
+                                .authenticationEntryPoint(customAuthenticationEntryPoint))
+                .build();
     }
 
     @Bean

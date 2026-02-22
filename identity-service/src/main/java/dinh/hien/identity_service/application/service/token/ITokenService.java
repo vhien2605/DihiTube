@@ -1,7 +1,6 @@
 package dinh.hien.identity_service.application.service.token;
-import org.springframework.stereotype.Service;
 
-@Service
+
 public interface ITokenService {
     String generate(TokenPayload payload, TokenType type);
 
