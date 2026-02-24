@@ -1,0 +1,38 @@
+services:
+  identity-service-db:
+    container_name: identity-service-db
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: hienhien123@
+      MYSQL_DATABASE: dihitube-identity-db
+    ports:
+      - "3308:3306"
+    networks:
+      - dihi-tube
+    volumes:
+      - C:/learning_code/web/microservice/persistence/identity-db:/var/lib/mysql
+  kafka:
+    container_name: kafka
+    image: apache/kafka:4.1.1
+    hostname: kafka
+    restart: always
+    ports:
+      - "9094:9094"
+    environment:
+      KAFKA_NODE_ID: 0
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 0@kafka:9093
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093,EXTERNAL://0.0.0.0:9094
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,EXTERNAL://localhost:9094
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+    networks:
+      - dihi-tube
+networks:
+  dihi-tube:
+    name: dihi-tube
+    external: true #khi ma network da co roi , khong cho tao nua

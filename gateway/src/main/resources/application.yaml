@@ -13,8 +13,8 @@ spring:
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka
-    register-with-eureka: true
+      defaultZone: http://service-discovery:8761/eureka/
+    register-with-eureka: false
     fetch-registry: true
 server:
   port: 8888
