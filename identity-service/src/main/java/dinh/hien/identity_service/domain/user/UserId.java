@@ -2,6 +2,8 @@ package dinh.hien.identity_service.domain.user;
 
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.uuid.Generators;
+import dinh.hien.identity_service.domain.exception.DError;
+import dinh.hien.identity_service.domain.exception.DomainException;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,7 +17,7 @@ public class UserId {
 
     private UserId(UUID value) {
         if (value == null) {
-            throw new IllegalArgumentException("UserId must not be null");
+            throw new DomainException(DError.ID_INVALID);
         }
         this.value = value;
     }

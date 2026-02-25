@@ -10,6 +10,10 @@ spring:
             uri: lb://identity-service
             predicates:
               - Path=/identity/**
+          - id: profile-service
+            uri: lb://profile-service
+            predicates:
+              - Path=/profile/**
 eureka:
   client:
     service-url:

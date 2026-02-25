@@ -32,16 +32,6 @@ public class JpaUser {
     @Column(name = "email", nullable = false)
     private String email;
 
-    @NotBlank
-    @Column(name = "display_name", nullable = false)
-    private String displayName;
-
-    @Column(name = "avatar_file_id",columnDefinition = "TEXT")
-    private String avatarFileId;
-
-    @Column(name = "description", columnDefinition = "TEXT")
-    private String description;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id", nullable = false)
     private JpaRole role;
