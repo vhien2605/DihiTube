@@ -1,6 +1,8 @@
 package dinh.hien.identity_service.domain.role;
 
 import com.fasterxml.uuid.Generators;
+import dinh.hien.identity_service.domain.exception.DError;
+import dinh.hien.identity_service.domain.exception.DomainException;
 import dinh.hien.identity_service.domain.user.UserId;
 import lombok.Getter;
 
@@ -13,7 +15,7 @@ public class RoleId {
 
     private RoleId(UUID value) {
         if (value == null) {
-            throw new IllegalArgumentException("UserId must not be null");
+            throw new DomainException(DError.ID_INVALID);
         }
         this.value = value;
     }

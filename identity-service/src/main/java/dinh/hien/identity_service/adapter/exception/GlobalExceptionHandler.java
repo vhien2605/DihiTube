@@ -23,9 +23,12 @@ public class GlobalExceptionHandler {
             1002,HttpStatus.UNAUTHORIZED,
             1003,HttpStatus.UNAUTHORIZED,
             1004,HttpStatus.UNAUTHORIZED,
-            1005,HttpStatus.UNAUTHORIZED
+            1005,HttpStatus.UNAUTHORIZED,
+            1006,HttpStatus.BAD_REQUEST,
+            1007,HttpStatus.BAD_REQUEST,
+            1008,HttpStatus.BAD_REQUEST,
+            1010,HttpStatus.BAD_REQUEST
     );
-
 
     @ExceptionHandler({DomainException.class})
     public ResponseEntity handleAppException(DomainException e, WebRequest request) {

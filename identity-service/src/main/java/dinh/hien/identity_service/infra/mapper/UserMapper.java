@@ -26,4 +26,16 @@ public class UserMapper {
                 )
         );
     }
+
+
+    public static JpaUser toJpa(User user) {
+        if (user == null) return null;
+        return JpaUser.builder()
+                .id(user.getId().getValue().toString())
+                .email(user.getEmail().getValue())
+                .password(user.getPassword().getHashValue())
+                .username(user.getUsername())
+                .role(RoleMapper.toJpa(user.getRole()))
+                .build();
+    }
 }
