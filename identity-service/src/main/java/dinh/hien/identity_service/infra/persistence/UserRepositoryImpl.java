@@ -4,6 +4,7 @@ import dinh.hien.identity_service.domain.role.Role;
 import dinh.hien.identity_service.domain.role.RoleId;
 import dinh.hien.identity_service.domain.user.*;
 import dinh.hien.identity_service.infra.mapper.UserMapper;
+import dinh.hien.identity_service.infra.model.JpaRole;
 import dinh.hien.identity_service.infra.model.JpaUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -24,5 +25,10 @@ public class UserRepositoryImpl implements IUserRepository {
             return Optional.of(user);
         }
         return Optional.empty();
+    }
+
+    @Override
+    public void save(User user) {
+        userJpaRepository.save(UserMapper.toJpa(user));
     }
 }

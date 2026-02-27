@@ -1,5 +1,7 @@
 package dinh.hien.identity_service.domain.user;
 
+import dinh.hien.identity_service.domain.exception.DError;
+import dinh.hien.identity_service.domain.exception.DomainException;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,7 +12,7 @@ public class Password {
 
     private Password(String hashValue) {
         if (hashValue== null || hashValue.isBlank()) {
-            throw new IllegalArgumentException("Password value must not be null or blank");
+            throw new DomainException(DError.PASSWORD_INVALID);
         }
         this.hashValue=hashValue;
     }
@@ -21,5 +23,9 @@ public class Password {
 
     public static Password of(String hashValue) {
         return new Password(hashValue);
+    }
+
+    public static Password fromRawValue(String rawValue,PasswordHasher hasher){
+        return new Password(hasher.hash(rawValue));
     }
 }

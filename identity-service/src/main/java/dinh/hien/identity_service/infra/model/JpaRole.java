@@ -22,6 +22,6 @@ public class JpaRole {
     private String id;
 
     @NotBlank
-    @Column(name = "username")
+    @Column(name = "name")
     private String name;
 }

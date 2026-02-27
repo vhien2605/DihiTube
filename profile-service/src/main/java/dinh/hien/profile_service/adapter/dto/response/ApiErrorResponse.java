@@ -1,0 +1,17 @@
+package dinh.hien.identity_service.adapter.dto.response;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
+import org.springframework.http.HttpStatus;
+
+import java.io.Serializable;
+
+
+@Setter
+@Getter
+@SuperBuilder
+public class ApiErrorResponse extends ApiResponse implements Serializable {
+    private String error;
+    private String path;
+}
