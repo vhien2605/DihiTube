@@ -11,6 +11,18 @@ services:
       - dihi-tube
     volumes:
       - C:/learning_code/web/microservice/persistence/identity-db:/var/lib/mysql
+  metadata-service-db:
+    container_name: metadata-service-db
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: hienhien123@
+      MYSQL_DATABASE: dihitube-metadata-db
+    ports:
+      - "3309:3306"
+    networks:
+      - dihi-tube
+    volumes:
+      - C:/learning_code/web/microservice/persistence/metadata-db:/var/lib/mysql
   kafka:
     container_name: kafka
     image: apache/kafka:4.1.1

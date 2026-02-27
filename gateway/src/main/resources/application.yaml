@@ -10,10 +10,15 @@ spring:
             uri: lb://identity-service
             predicates:
               - Path=/identity/**
+
+          - id: metadata-service
+            uri: lb://metadata-service
+            predicates:
+              - Path=/metadata/**
 eureka:
   client:
     service-url:
-      defaultZone: http://service-discovery:8761/eureka/
+      defaultZone: http://localhost:8761/eureka/
     register-with-eureka: false
     fetch-registry: true
 server:
