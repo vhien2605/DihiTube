@@ -12,7 +12,7 @@ public class Video {
     private final VideoId id;
     private String title;
     private String description;
-    private List<String> genres;
+    private List<Genre> genres;
     private String thumbnailUrl;
     private long duration;
     private Date releaseDate;
@@ -23,7 +23,7 @@ public class Video {
     private Date createdAt;
     private Date updatedAt;
 
-    public Video(VideoId id, String title, String description, List<String> genres,
+    public Video(VideoId id, String title, String description, List<Genre> genres,
                  String thumbnailUrl, long duration, Date releaseDate,
                  String storageKey) {
         this.id = id;

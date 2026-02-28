@@ -11,7 +11,7 @@ public class VideoMapper {
         CreateVideoCommand cmd = new CreateVideoCommand();
         cmd.title = request.getTitle();
         cmd.description = request.getDescription();
-        cmd.genres = request.getGenres();
+        cmd.genreIds = request.getGenreIds();
         cmd.thumbnailUrl = request.getThumbnailUrl();
         cmd.duration = request.getDuration();
         cmd.releaseDate = request.getReleaseDate();
