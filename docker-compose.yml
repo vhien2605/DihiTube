@@ -18,7 +18,7 @@ services:
       MYSQL_ROOT_PASSWORD: hienhien123@
       MYSQL_DATABASE: dihitube-metadata-db
     ports:
-      - "3309:3306"
+      - "3310:3306"
     networks:
       - dihi-tube
     volumes:
