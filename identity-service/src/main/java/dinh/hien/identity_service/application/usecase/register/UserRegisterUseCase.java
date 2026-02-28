@@ -9,6 +9,7 @@ import dinh.hien.identity_service.domain.user.*;
 import dinh.hien.identity_service.domain.user.event.UserCreatedEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,6 +20,7 @@ public class UserRegisterUseCase {
     private final UserEventPublisher userEventPublisher;
 
 
+    @Transactional
     public String registerUser(RegisterCommand command){
         var wrapper=userRepository.findByUsername(command.getUsername());
         if(wrapper.isPresent()){
@@ -36,9 +38,9 @@ public class UserRegisterUseCase {
         );
         // save user
         userRepository.save(user);
-        // event
+        // event domain
         var event =UserCreatedEvent.builder()
-                .userId(user.getId().getValue().toString())
+                .userId(user.getId())
                 .phoneNumber(command.getPhoneNumber())
                 .displayName(command.getDisplayName())
                 .build();

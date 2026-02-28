@@ -1,9 +1,10 @@
-package dinh.hien.identity_service.adapter.exception;
+package dinh.hien.profile_service.adapter.exception;
 
 
-import dinh.hien.identity_service.adapter.dto.response.ApiErrorResponse;
-import dinh.hien.identity_service.domain.exception.DomainException;
-import dinh.hien.identity_service.infra.exception.InfraException;
+
+import dinh.hien.profile_service.adapter.dto.response.ApiErrorResponse;
+import dinh.hien.profile_service.domain.exception.DomainException;
+import dinh.hien.profile_service.infra.exception.InfraException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,15 +20,10 @@ import java.util.Map;
 public class GlobalExceptionHandler {
     private static final Map<Integer, HttpStatus> httpStatusMap = Map.of(
             1000, HttpStatus.BAD_REQUEST,
-            1001,HttpStatus.UNAUTHORIZED,
-            1002,HttpStatus.UNAUTHORIZED,
-            1003,HttpStatus.UNAUTHORIZED,
-            1004,HttpStatus.UNAUTHORIZED,
-            1005,HttpStatus.UNAUTHORIZED,
-            1006,HttpStatus.BAD_REQUEST,
-            1007,HttpStatus.BAD_REQUEST,
-            1008,HttpStatus.BAD_REQUEST,
-            1010,HttpStatus.BAD_REQUEST
+            1001,HttpStatus.BAD_REQUEST,
+            1002,HttpStatus.BAD_REQUEST,
+            1003,HttpStatus.BAD_REQUEST,
+            1004,HttpStatus.BAD_REQUEST
     );
 
     @ExceptionHandler({DomainException.class})

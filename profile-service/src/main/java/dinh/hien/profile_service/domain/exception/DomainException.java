@@ -1,4 +1,5 @@
-package dinh.hien.identity_service.domain.exception;
+package dinh.hien.profile_service.domain.exception;
+
 
 
 import lombok.Getter;

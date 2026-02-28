@@ -1,6 +1,8 @@
 package dinh.hien.profile_service.domain.subscription;
 
 import com.fasterxml.uuid.Generators;
+import dinh.hien.profile_service.domain.exception.DError;
+import dinh.hien.profile_service.domain.exception.DomainException;
 import lombok.Getter;
 
 import java.util.UUID;
@@ -12,7 +14,7 @@ public class SubscriptionId {
 
     private SubscriptionId(UUID value) {
         if (value == null) {
-            throw new IllegalArgumentException("SubscriptionId must not be null");
+            throw new DomainException(DError.SUBSCRIPTION_ID_INVALID);
         }
         this.value = value;
     }

@@ -1,10 +1,8 @@
 package dinh.hien.identity_service.infra.persistence;
 
-import dinh.hien.identity_service.domain.role.Role;
-import dinh.hien.identity_service.domain.role.RoleId;
+
 import dinh.hien.identity_service.domain.user.*;
 import dinh.hien.identity_service.infra.mapper.UserMapper;
-import dinh.hien.identity_service.infra.model.JpaRole;
 import dinh.hien.identity_service.infra.model.JpaUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -28,7 +26,28 @@ public class UserRepositoryImpl implements IUserRepository {
     }
 
     @Override
+    public Optional<User> findById(UserId id) {
+        var wrapper=userJpaRepository.findById(id.getValue().toString());
+        if(wrapper.isPresent()){
+            JpaUser jpaUser=wrapper.get();
+            User user= UserMapper.toDomain(jpaUser);
+            return Optional.of(user);
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public boolean existedById(UserId id) {
+        return findById(id).isPresent();
+    }
+
+    @Override
     public void save(User user) {
         userJpaRepository.save(UserMapper.toJpa(user));
+    }
+
+    @Override
+    public void deleteById(UserId id) {
+        userJpaRepository.deleteById(id.getValue().toString());
     }
 }
