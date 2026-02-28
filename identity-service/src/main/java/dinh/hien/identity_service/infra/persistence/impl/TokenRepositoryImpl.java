@@ -36,4 +36,13 @@ public class TokenRepositoryImpl implements ITokenRepository {
             jpaRefreshTokenRepository.save(refreshToken);
         }
     }
+
+    @Override
+    public void deleteToken(String jti, TokenType type) {
+        if (type.equals(TokenType.ACCESS)) {
+            redisAccessRepository.deleteById(jti);
+        } else {
+            jpaRefreshTokenRepository.deleteById(jti);
+        }
+    }
 }

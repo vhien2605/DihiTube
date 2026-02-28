@@ -9,4 +9,5 @@ import lombok.*;
 @AllArgsConstructor
 public class LogoutCommand {
     private String accessToken;
+    private String refreshToken;
 }
