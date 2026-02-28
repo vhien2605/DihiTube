@@ -12,7 +12,7 @@ import lombok.*;
 public class User {
     private UserId id;
     private String username;
-    private Password password;
+    private Password password; // value object
     private Email email;
     private Role role;
 
