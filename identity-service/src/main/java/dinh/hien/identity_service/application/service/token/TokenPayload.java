@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class TokenPayload {
-    private String id;
+    private String userId;
     private String username;
     private String role;
 }

@@ -30,7 +30,7 @@ public class UserLoginUseCase {
         user.authenticatePassword(rawPassword, passwordHasher);
         // return jwt
         TokenPayload payload = TokenPayload.builder()
-                .id(user.getId().getValue().toString())
+                .userId(user.getId().getValue().toString())
                 .username(user.getUsername())
                 .role(user.getRole().getName())
                 .build();

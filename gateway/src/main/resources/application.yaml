@@ -6,19 +6,18 @@ spring:
       server:
         webflux:
           routes:
-          - id: identity-service
-            uri: lb://identity-service
-            predicates:
-              - Path=/identity/**
-
-          - id: metadata-service
-            uri: lb://metadata-service
-            predicates:
-              - Path=/metadata/**
-          - id: profile-service
-            uri: lb://profile-service
-            predicates:
-              - Path=/profile/**
+            - id: identity-service
+              uri: lb://identity-service
+              predicates:
+                - Path=/identity/**
+            - id: metadata-service
+              uri: lb://metadata-service
+              predicates:
+                - Path=/metadata/**
+            - id: profile-service
+              uri: lb://profile-service
+              predicates:
+                - Path=/profile/**
 eureka:
   client:
     service-url:
@@ -31,3 +30,6 @@ logging:
   level:
     org.springframework.cloud.gateway: DEBUG
     org.springframework.cloud.gateway.route.RouteDefinitionRouteLocator: DEBUG
+    level.reactor.netty.http.client: DEBUG
+    level.org.springframework.web.reactive.function.client: DEBUG
+    level.org.springframework.cloud.loadbalancer=DEBUG:

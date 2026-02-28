@@ -1,12 +1,10 @@
-package dinh.hien.identity_service.adapter.dto.response;
+package dinh.hien.gateway.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 import java.io.Serializable;
 
@@ -16,6 +14,7 @@ import java.io.Serializable;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public abstract class ApiResponse {
-    private String message;
+public class ApiErrorResponse extends ApiResponse implements Serializable {
+    private String error;
+    private String path;
 }

@@ -9,7 +9,6 @@ import dinh.hien.identity_service.adapter.dto.response.auth.IntrospectResponseDT
 import dinh.hien.identity_service.adapter.dto.response.auth.JwtResponseDTO;
 import dinh.hien.identity_service.adapter.dto.response.auth.RefreshResponseDTO;
 import dinh.hien.identity_service.adapter.mapper.AuthMapper;
-import dinh.hien.identity_service.application.usecase.introspect.IntrospectCommand;
 import dinh.hien.identity_service.application.usecase.introspect.IntrospectUseCase;
 import dinh.hien.identity_service.application.usecase.login.UserLoginUseCase;
 import dinh.hien.identity_service.application.usecase.logout.LogoutCommand;
@@ -21,10 +20,7 @@ import dinh.hien.identity_service.application.usecase.register.UserRegisterUseCa
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
@@ -79,7 +75,9 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<ApiSuccessResponse<String>> logout(HttpServletRequest request) {
+    public ResponseEntity<ApiSuccessResponse<String>> logout(HttpServletRequest request
+            , @RequestParam String refreshToken
+    ) {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         String bearerToken = httpRequest.getHeader("Authorization");
         String accessToken = "";
@@ -89,7 +87,10 @@ public class AuthController {
         ApiSuccessResponse<String> response =
                 ApiSuccessResponse.<String>builder()
                         .message("logout ok")
-                        .data(logoutUseCase.logout(LogoutCommand.builder().accessToken(accessToken).build()))
+                        .data(logoutUseCase.logout(LogoutCommand.builder()
+                                .accessToken(accessToken)
+                                .refreshToken(refreshToken)
+                                .build()))
                         .build();
         return ResponseEntity.ok(response);
     }

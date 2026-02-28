@@ -15,8 +15,12 @@ public class LogoutUseCase {
     private final ITokenService tokenService;
 
     public String logout(LogoutCommand command) {
-        TokenProperties properties = tokenService.getProperties(command.getAccessToken());
-        tokenRepository.saveToken(properties, TokenType.ACCESS);
+        TokenProperties accessProperties = tokenService.getProperties(command.getAccessToken());
+        TokenProperties refreshProperties = tokenService.getProperties(command.getRefreshToken());
+        // save access
+        tokenRepository.saveToken(accessProperties, TokenType.ACCESS);
+        // delete refresh
+        tokenRepository.deleteToken(refreshProperties.getJti(), TokenType.REFRESH);
         return "old token is disabled " + command.getAccessToken();
     }
 }

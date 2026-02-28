@@ -59,7 +59,7 @@ public class TokenServiceImpl implements ITokenService {
             secretKey = resetKey;
         }
         JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
-                .subject(payload.getId())
+                .subject(payload.getUserId())
                 .issuer("identity-service")
                 .issueTime(new Date(System.currentTimeMillis()))
                 .expirationTime(new Date(System.currentTimeMillis() + ttl))
