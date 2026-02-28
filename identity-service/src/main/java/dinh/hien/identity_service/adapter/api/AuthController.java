@@ -1,6 +1,5 @@
 package dinh.hien.identity_service.adapter.api;
 
-
 import dinh.hien.identity_service.adapter.dto.request.LoginRequestDTO;
 import dinh.hien.identity_service.adapter.dto.request.RefreshRequestDTO;
 import dinh.hien.identity_service.adapter.dto.request.RegisterRequestDTO;
@@ -9,10 +8,13 @@ import dinh.hien.identity_service.adapter.dto.response.auth.JwtResponseDTO;
 import dinh.hien.identity_service.adapter.dto.response.auth.RefreshResponse;
 import dinh.hien.identity_service.adapter.mapper.AuthMapper;
 import dinh.hien.identity_service.application.usecase.login.UserLoginUseCase;
+import dinh.hien.identity_service.application.usecase.logout.LogoutCommand;
+import dinh.hien.identity_service.application.usecase.logout.LogoutUseCase;
 import dinh.hien.identity_service.application.usecase.refresh.RefreshCommand;
 import dinh.hien.identity_service.application.usecase.refresh.UserTokenRefreshUseCase;
 import dinh.hien.identity_service.application.usecase.register.RegisterCommand;
 import dinh.hien.identity_service.application.usecase.register.UserRegisterUseCase;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,6 +29,7 @@ public class AuthController {
     private final UserLoginUseCase userLoginUseCase;
     private final UserRegisterUseCase userRegisterUseCase;
     private final UserTokenRefreshUseCase userTokenRefreshUseCase;
+    private final LogoutUseCase logoutUseCase;
 
     @PostMapping("/login")
     public ResponseEntity<ApiSuccessResponse<JwtResponseDTO>> login(
@@ -66,6 +69,22 @@ public class AuthController {
                         .data(RefreshResponse.builder()
                                 .accessToken(usecaseResult.getAccessToken())
                                 .build())
+                        .build();
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<ApiSuccessResponse<String>> logout(HttpServletRequest request) {
+        HttpServletRequest httpRequest = (HttpServletRequest) request;
+        String bearerToken = httpRequest.getHeader("Authorization");
+        String accessToken = "";
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            accessToken = bearerToken.substring(7);
+        }
+        ApiSuccessResponse<String> response =
+                ApiSuccessResponse.<String>builder()
+                        .message("logout ok")
+                        .data(logoutUseCase.logout(LogoutCommand.builder().accessToken(accessToken).build()))
                         .build();
         return ResponseEntity.ok(response);
     }
