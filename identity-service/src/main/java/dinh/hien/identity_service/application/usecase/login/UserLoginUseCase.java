@@ -1,6 +1,7 @@
 package dinh.hien.identity_service.application.usecase.login;
 
 
+import dinh.hien.identity_service.application.service.token.ITokenRepository;
 import dinh.hien.identity_service.application.service.token.ITokenService;
 import dinh.hien.identity_service.application.service.token.TokenPayload;
 import dinh.hien.identity_service.application.service.token.TokenType;
@@ -18,22 +19,25 @@ public class UserLoginUseCase {
     private final IUserRepository userRepository;
     private final PasswordHasher passwordHasher;
     private final ITokenService tokenService;
+    private final ITokenRepository tokenRepository;
 
-    public LoginResult loginUser(LoginCommand loginCommand){
-        String username= loginCommand.getUsername();
-        String rawPassword= loginCommand.getPassword();
-        User user=userRepository.findByUsername(username)
-                .orElseThrow(()->new DomainException(DError.USER_NOT_EXISTED));
+    public LoginResult loginUser(LoginCommand loginCommand) {
+        String username = loginCommand.getUsername();
+        String rawPassword = loginCommand.getPassword();
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new DomainException(DError.USER_NOT_EXISTED));
         // check password
-        user.authenticatePassword(rawPassword,passwordHasher);
+        user.authenticatePassword(rawPassword, passwordHasher);
         // return jwt
         TokenPayload payload = TokenPayload.builder()
                 .id(user.getId().getValue().toString())
                 .username(user.getUsername())
                 .role(user.getRole().getName())
                 .build();
-        String accessToken=tokenService.generate(payload, TokenType.ACCESS);
-        String refreshToken=tokenService.generate(payload, TokenType.REFRESH);
+        String accessToken = tokenService.generate(payload, TokenType.ACCESS);
+        String refreshToken = tokenService.generate(payload, TokenType.REFRESH);
+        tokenRepository.saveToken(tokenService.getProperties(refreshToken), TokenType.REFRESH);
+
         return LoginResult.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
