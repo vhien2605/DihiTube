@@ -1,19 +1,14 @@
-package dinh.hien.identity_service.adapter.dto.response;
+package dinh.hien.gateway.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
-import java.io.Serializable;
-
-
+@SuperBuilder
 @Setter
 @Getter
-@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 public abstract class ApiResponse {

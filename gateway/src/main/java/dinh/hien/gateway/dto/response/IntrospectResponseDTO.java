@@ -1,4 +1,4 @@
-package dinh.hien.identity_service.adapter.dto.response.auth;
+package dinh.hien.gateway.dto.response;
 
 
 import com.fasterxml.jackson.annotation.JsonInclude;

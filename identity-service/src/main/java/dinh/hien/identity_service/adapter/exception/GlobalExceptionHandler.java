@@ -59,4 +59,19 @@ public class GlobalExceptionHandler {
                                 .build()
                 );
     }
+
+
+    @ExceptionHandler({Exception.class})
+    public ResponseEntity handleGeneralException(Exception e, WebRequest request) {
+        log.info("---------------------------general exception handler start---------------------------");
+        e.printStackTrace();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(
+                        ApiErrorResponse.builder()
+                                .error(HttpStatus.INTERNAL_SERVER_ERROR.name())
+                                .message(e.getMessage())
+                                .path(request.getDescription(false))
+                                .build()
+                );
+    }
 }
