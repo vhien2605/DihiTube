@@ -1,12 +1,16 @@
 package dinh.hien.identity_service.adapter.api;
 
+import dinh.hien.identity_service.adapter.dto.request.IntrospectRequestDTO;
 import dinh.hien.identity_service.adapter.dto.request.LoginRequestDTO;
 import dinh.hien.identity_service.adapter.dto.request.RefreshRequestDTO;
 import dinh.hien.identity_service.adapter.dto.request.RegisterRequestDTO;
 import dinh.hien.identity_service.adapter.dto.response.ApiSuccessResponse;
+import dinh.hien.identity_service.adapter.dto.response.auth.IntrospectResponseDTO;
 import dinh.hien.identity_service.adapter.dto.response.auth.JwtResponseDTO;
-import dinh.hien.identity_service.adapter.dto.response.auth.RefreshResponse;
+import dinh.hien.identity_service.adapter.dto.response.auth.RefreshResponseDTO;
 import dinh.hien.identity_service.adapter.mapper.AuthMapper;
+import dinh.hien.identity_service.application.usecase.introspect.IntrospectCommand;
+import dinh.hien.identity_service.application.usecase.introspect.IntrospectUseCase;
 import dinh.hien.identity_service.application.usecase.login.UserLoginUseCase;
 import dinh.hien.identity_service.application.usecase.logout.LogoutCommand;
 import dinh.hien.identity_service.application.usecase.logout.LogoutUseCase;
@@ -30,6 +34,7 @@ public class AuthController {
     private final UserRegisterUseCase userRegisterUseCase;
     private final UserTokenRefreshUseCase userTokenRefreshUseCase;
     private final LogoutUseCase logoutUseCase;
+    private final IntrospectUseCase introspectUseCase;
 
     @PostMapping("/login")
     public ResponseEntity<ApiSuccessResponse<JwtResponseDTO>> login(
@@ -59,14 +64,14 @@ public class AuthController {
 
 
     @PostMapping("/refresh")
-    public ResponseEntity<ApiSuccessResponse<RefreshResponse>> refresh(
+    public ResponseEntity<ApiSuccessResponse<RefreshResponseDTO>> refresh(
             @RequestBody RefreshRequestDTO dto) {
         RefreshCommand command = RefreshCommand.builder().refreshToken(dto.getRefreshToken()).build();
         var usecaseResult = userTokenRefreshUseCase.refresh(command);
-        ApiSuccessResponse<RefreshResponse> response =
-                ApiSuccessResponse.<RefreshResponse>builder()
+        ApiSuccessResponse<RefreshResponseDTO> response =
+                ApiSuccessResponse.<RefreshResponseDTO>builder()
                         .message("refresh token")
-                        .data(RefreshResponse.builder()
+                        .data(RefreshResponseDTO.builder()
                                 .accessToken(usecaseResult.getAccessToken())
                                 .build())
                         .build();
@@ -85,6 +90,18 @@ public class AuthController {
                 ApiSuccessResponse.<String>builder()
                         .message("logout ok")
                         .data(logoutUseCase.logout(LogoutCommand.builder().accessToken(accessToken).build()))
+                        .build();
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/introspect")
+    public ResponseEntity<ApiSuccessResponse<IntrospectResponseDTO>> introspect(
+            @RequestBody IntrospectRequestDTO request) {
+        var command = AuthMapper.toIntrospectCommand(request);
+        ApiSuccessResponse<IntrospectResponseDTO> response =
+                ApiSuccessResponse.<IntrospectResponseDTO>builder()
+                        .message("introspect token result sent")
+                        .data(AuthMapper.toIntrospectResponse(introspectUseCase.introspect(command)))
                         .build();
         return ResponseEntity.ok(response);
     }

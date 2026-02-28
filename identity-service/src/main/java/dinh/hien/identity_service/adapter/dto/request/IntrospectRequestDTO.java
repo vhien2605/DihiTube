@@ -1,4 +1,4 @@
-package dinh.hien.identity_service.adapter.dto.response.auth;
+package dinh.hien.identity_service.adapter.dto.request;
 
 import lombok.*;
 
@@ -7,6 +7,6 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RefreshResponse {
+public class IntrospectRequestDTO {
     private String accessToken;
 }

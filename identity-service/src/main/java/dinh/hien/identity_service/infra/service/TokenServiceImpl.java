@@ -105,7 +105,7 @@ public class TokenServiceImpl implements ITokenService {
                     claims.getStringClaim("username"),
                     claims.getStringClaim("scope").replace("ROLE_", "")
             );
-        } catch (ParseException | JOSEException e) {
+        } catch (Exception e) {
             throw new AuthException(InfraError.JWT_INVALID);
         }
     }
@@ -124,7 +124,7 @@ public class TokenServiceImpl implements ITokenService {
                     .subject(claims.getSubject())
                     .ttl(calculateTtl(claims))
                     .build();
-        } catch (ParseException e) {
+        } catch (Exception e) {
             throw new AuthException(InfraError.JWT_INVALID);
         }
     }
