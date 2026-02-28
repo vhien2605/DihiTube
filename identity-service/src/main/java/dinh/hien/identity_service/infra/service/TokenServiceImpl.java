@@ -6,11 +6,16 @@ import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import dinh.hien.identity_service.application.service.token.ITokenService;
 import dinh.hien.identity_service.application.service.token.TokenPayload;
+import dinh.hien.identity_service.application.service.token.TokenProperties;
 import dinh.hien.identity_service.application.service.token.TokenType;
 import dinh.hien.identity_service.infra.exception.AuthException;
 import dinh.hien.identity_service.infra.exception.InfraError;
+import dinh.hien.identity_service.infra.persistence.repository.JpaRefreshTokenRepository;
+import dinh.hien.identity_service.infra.persistence.repository.RedisAccessRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
@@ -20,6 +25,7 @@ import java.util.UUID;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class TokenServiceImpl implements ITokenService {
     @Value("${security.jwt.access.timeout}")
     private long accessTTL;
@@ -33,6 +39,9 @@ public class TokenServiceImpl implements ITokenService {
     private String refreshKey;
     @Value("${security.jwt.reset.secretKey}")
     private String resetKey;
+
+    private final RedisAccessRepository redisAccessRepository;
+    private final JpaRefreshTokenRepository jpaRefreshTokenRepository;
 
     @Override
     public String generate(TokenPayload payload, TokenType type) {
@@ -55,8 +64,8 @@ public class TokenServiceImpl implements ITokenService {
                 .issueTime(new Date(System.currentTimeMillis()))
                 .expirationTime(new Date(System.currentTimeMillis() + ttl))
                 .jwtID(UUID.randomUUID().toString())
-                .claim("scope", "ROLE_"+ payload.getRole())
-                .claim("username",payload.getUsername())
+                .claim("scope", "ROLE_" + payload.getRole())
+                .claim("username", payload.getUsername())
                 .build();
         Payload jwtPayload = new Payload(claimsSet.toJSONObject());
         JWSObject jwsObject = new JWSObject(header, jwtPayload);
@@ -86,6 +95,11 @@ public class TokenServiceImpl implements ITokenService {
             if (claims.getExpirationTime().before(new Date()))
                 throw new AuthException(InfraError.JWT_EXPIRED);
 
+
+            if (isDisable(claims.getJWTID(), type)) {
+                throw new AuthException(InfraError.TOKEN_DISABLE);
+            }
+
             return new TokenPayload(
                     claims.getSubject(),
                     claims.getStringClaim("username"),
@@ -95,6 +109,49 @@ public class TokenServiceImpl implements ITokenService {
             throw new AuthException(InfraError.JWT_INVALID);
         }
     }
+
+    @Override
+    public TokenProperties getProperties(String token) {
+        try {
+            JWSObject jwsObject = JWSObject.parse(token);
+            JWTClaimsSet claims = JWTClaimsSet.parse(
+                    jwsObject.getPayload().toJSONObject()
+            );
+            return TokenProperties.builder()
+                    .jti(claims.getJWTID())
+                    .userId(claims.getSubject())
+                    .issuer(claims.getIssuer())
+                    .subject(claims.getSubject())
+                    .ttl(calculateTtl(claims))
+                    .build();
+        } catch (ParseException e) {
+            throw new AuthException(InfraError.JWT_INVALID);
+        }
+    }
+
+
+    private boolean isDisable(String jti, TokenType type) {
+        if (type.equals(TokenType.ACCESS)) {
+            var wrapper = redisAccessRepository.findById(jti);
+            if (wrapper.isPresent()) {
+                return true;
+            }
+        } else if (type.equals(TokenType.REFRESH)) {
+            var wrapper = jpaRefreshTokenRepository.findById(jti);
+            if (wrapper.isEmpty()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    private long calculateTtl(JWTClaimsSet claims) {
+        Date expiration = claims.getExpirationTime();
+        if (expiration == null) return 0;
+        return expiration.getTime() - System.currentTimeMillis();
+    }
+
 
     private String getSecretKey(TokenType type) {
         return switch (type) {

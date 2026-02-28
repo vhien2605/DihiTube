@@ -2,7 +2,7 @@ package dinh.hien.identity_service.adapter.mapper;
 
 import dinh.hien.identity_service.adapter.dto.request.LoginRequestDTO;
 import dinh.hien.identity_service.adapter.dto.request.RegisterRequestDTO;
-import dinh.hien.identity_service.adapter.dto.response.JwtResponseDTO;
+import dinh.hien.identity_service.adapter.dto.response.auth.JwtResponseDTO;
 import dinh.hien.identity_service.adapter.messaging.event.UserProfileCreatedFailEvent;
 import dinh.hien.identity_service.application.usecase.login.LoginCommand;
 import dinh.hien.identity_service.application.usecase.login.LoginResult;
