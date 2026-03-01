@@ -67,6 +67,19 @@ services:
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
     networks:
       - dihi-tube
+  minio:
+    image: minio/minio
+    container_name: minio
+    ports:
+      - "9000:9000"   # S3 API
+      - "9001:9001"   # Web Console
+    environment:
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: hienhien123@
+    command: server /data --console-address ":9001"
+    restart: unless-stopped
+    networks:
+      - dihi-tube
 networks:
   dihi-tube:
     name: dihi-tube
