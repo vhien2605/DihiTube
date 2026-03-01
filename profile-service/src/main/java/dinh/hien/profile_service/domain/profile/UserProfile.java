@@ -21,14 +21,11 @@ public class UserProfile {
     private PhoneNumber phoneNumber;
     private Subscription subscription;
 
-    public void standardSubscribe(){
-        SubscriptionId subscriptionId=SubscriptionId.generate();
-        this.subscription= new Subscription(
+    public void standardSubscribe() {
+        SubscriptionId subscriptionId = SubscriptionId.generate();
+        this.subscription = new Subscription(
                 subscriptionId,
-                id,
-                SubscriptionType.STANDARD,
-                new Date(),
-                new Date()
+                SubscriptionType.STANDARD
         );
     }
 }

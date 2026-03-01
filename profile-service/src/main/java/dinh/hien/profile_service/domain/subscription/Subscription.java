@@ -12,8 +12,5 @@ import java.util.Date;
 @NoArgsConstructor
 public class Subscription {
     private SubscriptionId id;
-    private ProfileId profileId;
     private SubscriptionType type;
-    private Date startDate;
-    private Date endDate;
 }
