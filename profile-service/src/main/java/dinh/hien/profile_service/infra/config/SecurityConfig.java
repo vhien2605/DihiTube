@@ -23,8 +23,8 @@ public class SecurityConfig {
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
 
-    private final String[] WHITE_LIST= {
-
+    private final String[] WHITE_LIST = {
+            "/**"
     };
 
 
@@ -68,7 +68,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public ObjectMapper objectMapper(){
+    public ObjectMapper objectMapper() {
         return new ObjectMapper();
     }
 }
