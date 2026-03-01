@@ -1,10 +1,11 @@
 package com.pm.metadataservice.infra.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 @Entity
 @Table(name = "videos")
@@ -12,6 +13,7 @@ import lombok.Setter;
 @Setter
 public class JpaVideo {
     @Id
+    @NotBlank
     private String id;
     private String title;
     private String description;
@@ -21,4 +23,12 @@ public class JpaVideo {
     private long views;
     private String storageKey;
     private String status;
+
+    @ManyToMany
+    @JoinTable(
+            name = "video_genres",
+            joinColumns = @JoinColumn(name = "video_id"),
+            inverseJoinColumns = @JoinColumn(name = "genre_id")
+    )
+    private List<JpaGenre> genres;
 }
