@@ -11,6 +11,17 @@ services:
       - dihi-tube
     volumes:
       - C:/learning_code/web/microservice/persistence/identity-db:/var/lib/mysql
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+    command: >
+      redis-server
+      --requirepass hienhien123@
+      --appendonly yes
+    volumes:
+      - "C:/learning_code/web/microservice/persistence/redis:/data"
   metadata-service-db:
     container_name: metadata-service-db
     image: mysql:latest
@@ -18,7 +29,7 @@ services:
       MYSQL_ROOT_PASSWORD: hienhien123@
       MYSQL_DATABASE: dihitube-metadata-db
     ports:
-      - "3309:3306"
+      - "3310:3306"
     networks:
       - dihi-tube
     volumes:

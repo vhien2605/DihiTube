@@ -23,7 +23,7 @@ public class UserProfile {
 
     public void standardSubscribe(){
         SubscriptionId subscriptionId=SubscriptionId.generate();
-        Subscription subscription=new Subscription(
+        this.subscription= new Subscription(
                 subscriptionId,
                 id,
                 SubscriptionType.STANDARD,

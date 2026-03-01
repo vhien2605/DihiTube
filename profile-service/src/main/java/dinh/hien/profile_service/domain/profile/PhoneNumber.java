@@ -1,5 +1,7 @@
 package dinh.hien.profile_service.domain.profile;
 
+import dinh.hien.profile_service.domain.exception.DError;
+import dinh.hien.profile_service.domain.exception.DomainException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,13 +22,13 @@ public class PhoneNumber {
 
     public static PhoneNumber of(String raw) {
         if (raw == null || raw.isBlank()) {
-            throw new IllegalArgumentException("Phone number cannot be null or blank");
+            throw new DomainException(DError.PHONE_NUMBER_INVALID);
         }
 
         String normalized = normalize(raw);
 
         if (!PHONE_PATTERN.matcher(normalized).matches()) {
-            throw new IllegalArgumentException("Invalid phone number: " + raw);
+            throw new DomainException(DError.PHONE_NUMBER_INVALID);
         }
 
         return new PhoneNumber(normalized);

@@ -26,6 +26,7 @@ public class UserProfileServiceImpl implements IUserProfileService {
         JpaSubscription subscription=jpaSubscriptionRepository.findByType(subscriptionType).
                 orElseThrow(()-> new InfraException(InfraError.SUBSCRIPTION_NOT_FOUND));
         JpaProfile profile=JpaProfile.builder()
+                .id(userProfile.getId().getValue().toString())
                 .displayName(userProfile.getDisplayName())
                 .subscription(subscription)
                 .phoneNumber(userProfile.getPhoneNumber().getValue())

@@ -1,4 +1,4 @@
-package dinh.hien.profile_service.adapter.event;
+package dinh.hien.identity_service.adapter.messaging.event;
 
 import lombok.*;
 

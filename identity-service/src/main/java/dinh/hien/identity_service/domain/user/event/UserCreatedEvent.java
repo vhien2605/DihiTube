@@ -1,6 +1,7 @@
 package dinh.hien.identity_service.domain.user.event;
 
 
+import dinh.hien.identity_service.domain.user.UserId;
 import lombok.*;
 
 import java.io.Serializable;
@@ -11,7 +12,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserCreatedEvent implements Serializable {
-    private String userId;
+    private UserId userId;
     private String displayName;
     private String phoneNumber;
 }

@@ -1,6 +1,8 @@
 package dinh.hien.profile_service.domain.profile;
 
 import com.fasterxml.uuid.Generators;
+import dinh.hien.profile_service.domain.exception.DError;
+import dinh.hien.profile_service.domain.exception.DomainException;
 import lombok.Getter;
 
 import java.util.UUID;
@@ -11,7 +13,7 @@ public class ProfileId {
 
     private ProfileId(UUID value) {
         if (value == null) {
-            throw new IllegalArgumentException("ProfileId must not be null");
+            throw new DomainException(DError.PROFILE_ID_INVALID);
         }
         this.value = value;
     }

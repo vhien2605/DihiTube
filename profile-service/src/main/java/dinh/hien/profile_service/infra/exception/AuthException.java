@@ -1,4 +1,4 @@
-package dinh.hien.identity_service.infra.exception;
+package dinh.hien.profile_service.infra.exception;
 
 import lombok.Getter;
 import org.springframework.security.core.AuthenticationException;

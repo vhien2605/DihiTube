@@ -1,9 +1,9 @@
-package dinh.hien.identity_service.adapter.dto.response;
+package dinh.hien.profile_service.adapter.dto.response;
+
 
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import org.springframework.http.HttpStatus;
 
 import java.io.Serializable;
 
