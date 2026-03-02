@@ -5,11 +5,13 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Date;
 import java.util.List;
 
 @Getter
+@Setter
 public class CreateVideoRequest {
     @NotBlank(message = "Title is not blank")
     private String title;
@@ -31,4 +33,6 @@ public class CreateVideoRequest {
 
     @NotBlank(message = "Storage key is not blank")
     private String storageKey;
+
+    private boolean isFreeResources;
 }

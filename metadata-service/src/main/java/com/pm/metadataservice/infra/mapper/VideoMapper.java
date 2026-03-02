@@ -15,6 +15,7 @@ public class VideoMapper {
         jpa.setViews(video.getViews());
         jpa.setStorageKey(video.getStorageKey());
         jpa.setStatus(video.getStatus().name());
+        jpa.setFreeResources(video.isFreeResources());
         return jpa;
     }
 
@@ -27,7 +28,8 @@ public class VideoMapper {
                 jpa.getThumbnailUrl(),
                 jpa.getDuration(),
                 null,
-                jpa.getStorageKey()
+                jpa.getStorageKey(),
+                jpa.isFreeResources()
         );
     }
 }
