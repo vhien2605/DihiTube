@@ -16,6 +16,7 @@ public class VideoMapper {
         cmd.duration = request.getDuration();
         cmd.releaseDate = request.getReleaseDate();
         cmd.storageKey = request.getStorageKey();
+        cmd.isFreeResources = request.isFreeResources();
 
         return cmd;
     }
