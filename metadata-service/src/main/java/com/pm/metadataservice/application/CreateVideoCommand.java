@@ -17,4 +17,5 @@ public class CreateVideoCommand {
     public long duration;
     public Date releaseDate;
     public String storageKey;
+    public boolean isFreeResources;
 }

@@ -32,7 +32,8 @@ public class VideoApplicationService {
                 cmd.thumbnailUrl,
                 cmd.duration,
                 cmd.releaseDate,
-                cmd.storageKey
+                cmd.storageKey,
+                cmd.isFreeResources
         );
 
         videoRepository.save(video);

@@ -20,10 +20,11 @@ public class Video {
     private long views;
     private String storageKey;
     private VideoStatus status;
+    private boolean isFreeResources;
 
     public Video(VideoId id, String title, String description, List<Genre> genres,
                  String thumbnailUrl, long duration, Date releaseDate,
-                 String storageKey) {
+                 String storageKey, boolean isFreeResources) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -34,6 +35,7 @@ public class Video {
         this.storageKey = storageKey;
         this.status = VideoStatus.PROCESSING;
         this.views = 0;
+        this.isFreeResources = isFreeResources;
     }
 
     public void increaseView() {

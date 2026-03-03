@@ -23,6 +23,7 @@ public class JpaVideo {
     private long views;
     private String storageKey;
     private String status;
+    private boolean isFreeResources;
 
     @ManyToMany
     @JoinTable(

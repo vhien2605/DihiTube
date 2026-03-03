@@ -7,10 +7,11 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum DError {
-   PHONE_NUMBER_INVALID(1001,"Your phone number is invalid"),
-    PROFILE_ID_INVALID(1002,"Your id is invalid"),
-    USER_ID_INVALID(1003,"Your user id is invalid"),
-    SUBSCRIPTION_ID_INVALID(1004,"Your subscription id is invalid"),
+    PHONE_NUMBER_INVALID(1001, "Your phone number is invalid"),
+    PROFILE_ID_INVALID(1002, "Your id is invalid"),
+    USER_ID_INVALID(1003, "Your user id is invalid"),
+    SUBSCRIPTION_ID_INVALID(1004, "Your subscription id is invalid"),
+    PROFILE_NOT_EXISTED(1005, "Your profile does not exist"),
     ;
     private final int code;
     private final String message;
