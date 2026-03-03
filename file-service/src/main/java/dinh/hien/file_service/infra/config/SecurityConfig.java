@@ -21,7 +21,7 @@ public class SecurityConfig {
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
     private final String[] WHITE_LIST = {
-
+            "/internal/**"
     };
 
     @Bean
