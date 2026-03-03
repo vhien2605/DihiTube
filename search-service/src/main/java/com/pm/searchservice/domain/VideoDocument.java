@@ -2,11 +2,13 @@ package com.pm.searchservice.domain;
 
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.data.elasticsearch.annotations.Document;
 
 import java.util.List;
 
 @Getter
 @Builder
+@Document(indexName = "videos")
 public class VideoDocument {
     private String id;
     private String title;

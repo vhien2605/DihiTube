@@ -1,15 +1,14 @@
-package com.pm.searchservice.application;
+package com.pm.searchservice.application.createIndex;
 
 import com.pm.searchservice.domain.VideoDocument;
-import com.pm.searchservice.domain.VideoSearchRepository;
-import com.pm.searchservice.infra.VideoSearchImpl;
+import com.pm.searchservice.domain.VideoCreateRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class CreateIndexUseCase {
-    private final VideoSearchRepository videoSearch;
+    private final VideoCreateRepository videoSearch;
 
     public void execute() {
         videoSearch.createIndex();

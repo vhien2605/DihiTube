@@ -1,6 +1,9 @@
 package com.pm.searchservice.domain;
 
+import java.util.List;
+
 public interface VideoSearchRepository {
-    void createIndex();
-    void createDocument(VideoDocument videoDocument);
+    List<VideoDocument> searchByTitle(String keyword, int page, int size);
+    List<VideoDocument> autoComplete(String keyword, int page, int size);
+
 }

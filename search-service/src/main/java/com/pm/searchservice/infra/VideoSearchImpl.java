@@ -1,94 +1,75 @@
 package com.pm.searchservice.infra;
 
-import co.elastic.clients.elasticsearch.ElasticsearchClient;
-import co.elastic.clients.elasticsearch._types.analysis.EdgeNGramTokenizer;
-import co.elastic.clients.elasticsearch._types.analysis.TokenChar;
-import co.elastic.clients.elasticsearch._types.analysis.TokenizerDefinition;
-import co.elastic.clients.util.ObjectBuilder;
+import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
+import co.elastic.clients.elasticsearch._types.query_dsl.TextQueryType;
 import com.pm.searchservice.domain.VideoDocument;
 import com.pm.searchservice.domain.VideoSearchRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.elasticsearch.client.elc.NativeQuery;
+import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
+import org.springframework.data.elasticsearch.core.SearchHit;
+import org.springframework.data.elasticsearch.core.SearchHits;
+import org.springframework.data.elasticsearch.core.query.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.function.Function;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
 public class VideoSearchImpl implements VideoSearchRepository {
 
-    private final ElasticsearchClient client;
+    private final ElasticsearchOperations elasticsearchOperations;
 
     @Override
-    public void createIndex() {
+    public List<VideoDocument> searchByTitle(String keyword, int page, int size) {
         try {
-            boolean exists = client.indices()
-                    .exists(e -> e.index("videos"))
-                    .value();
+            BoolQuery.Builder boolQuery = new BoolQuery.Builder();
 
-            if (exists) {
-                return;
-            }
+            boolQuery.must(q -> q
+                    .match(m -> m
+                            .field("title")
+                            .query(keyword)
+                            .fuzziness("AUTO")
+                    ));
 
-            client.indices().create(c -> c
-                    .index("videos")
-                    .settings(s -> s
-                            .analysis(a -> a
+            NativeQuery query = NativeQuery.builder()
+                    .withQuery(q -> q.bool(boolQuery.build()))
+                    .withPageable(PageRequest.of(page, size))
+                    .build();
 
-                                    .tokenizer("edge_ngram_tokenizer", t -> t
-                                            .definition(td -> td
-                                                    .edgeNgram(ng -> ng
-                                                            .minGram(1)
-                                                            .maxGram(20)
-                                                            .tokenChars(TokenChar.Letter, TokenChar.Digit)
-                                                    )
-                                            )
-                                    )
-                                    .analyzer("autocomplete", an -> an
-                                            .custom(custom -> custom
-                                                    .tokenizer("edge_ngram_tokenizer")
-                                                    .filter("lowercase")
-                                            )
-                                    )
-                            )
-                    )
-                    .mappings(m -> m
-                            .properties("id", p -> p.keyword(k -> k))
-                            .properties("title", p -> p.text(t -> t
-                                    // field chính → search bình thường
-                                    .analyzer("standard")
+            SearchHits<VideoDocument> hits =
+                    elasticsearchOperations.search(query, VideoDocument.class);
 
-                                    // sub-fields
-                                    .fields("autocomplete", f -> f
-                                            .text(tt -> tt
-                                                    .analyzer("autocomplete")
-                                                    .searchAnalyzer("standard")
-                                            )
-                                    )
-                                    .fields("keyword", f -> f
-                                            .keyword(k -> k)
-                                    )
-                            ))
-                            .properties("description", p -> p.text(t -> t.index(false)))
-                            .properties("genre", p -> p.keyword(k -> k))
-                            .properties("views", p -> p.long_(l -> l))
-                    )
-            );
-
+            return hits.stream()
+                    .map(SearchHit::getContent)
+                    .toList();
         } catch (Exception e) {
-            throw new RuntimeException("Cannot create index", e);
+            throw new RuntimeException(e);
         }
+
     }
 
     @Override
-    public void createDocument(VideoDocument doc) {
+    public List<VideoDocument> autoComplete(String keyword, int page, int size) {
         try {
-            client.index(i -> i
-                    .index("videos")
-                    .id(doc.getId())
-                    .document(doc)
-            );
+            Query query = NativeQuery.builder()
+                    .withQuery(q -> q
+                            .match(m -> m
+                                    .query(keyword)
+                                    .field("title.autocomplete")
+                                    .type(TextQueryType.BoolPrefix)))
+                    .withPageable(PageRequest.of(0, size))
+                    .build();
+
+            SearchHits<VideoDocument> hits = elasticsearchOperations.search(query, VideoDocument.class);
+
+            return hits.stream()
+                    .map(SearchHit::getContent)
+                    .toList();
         } catch (Exception e) {
-            throw new RuntimeException("Index failed", e);
+            throw new RuntimeException(e);
         }
     }
 }
