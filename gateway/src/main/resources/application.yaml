@@ -18,6 +18,10 @@ spring:
               uri: lb://profile-service
               predicates:
                 - Path=/profile/**
+            - id: file-service
+              uri: lb://file-service
+              predicates:
+                - Path=/file/external/**
 eureka:
   client:
     service-url:
