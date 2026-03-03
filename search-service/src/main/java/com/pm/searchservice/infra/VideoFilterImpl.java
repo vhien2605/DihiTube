@@ -1,10 +1,10 @@
 package com.pm.searchservice.infra;
 
-import co.elastic.clients.elasticsearch._types.FieldValue;
+import co.elastic.clients.elasticsearch._types.SortOrder;
 import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
-import co.elastic.clients.elasticsearch._types.query_dsl.TextQueryType;
+import com.pm.searchservice.domain.SortStatus;
 import com.pm.searchservice.domain.VideoDocument;
-import com.pm.searchservice.domain.VideoSearchRepository;
+import com.pm.searchservice.domain.VideoFilterRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.client.elc.NativeQuery;
@@ -15,12 +15,10 @@ import org.springframework.data.elasticsearch.core.query.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
-public class VideoSearchImpl implements VideoSearchRepository {
+public class VideoFilterImpl implements VideoFilterRepository {
 
     private final ElasticsearchOperations elasticsearchOperations;
 
@@ -96,6 +94,36 @@ public class VideoSearchImpl implements VideoSearchRepository {
                                 );
                                 return b;
                             })
+                    )
+                    .withPageable(PageRequest.of(page, size))
+                    .build();
+
+            SearchHits<VideoDocument> hits =
+                    elasticsearchOperations.search(query, VideoDocument.class);
+
+            return hits.getSearchHits()
+                    .stream()
+                    .map(SearchHit::getContent)
+                    .toList();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public List<VideoDocument> sortByViews(SortStatus sort, int page, int size) {
+        try {
+            SortOrder order = (sort == SortStatus.DESC)
+                    ? SortOrder.Desc
+                    : SortOrder.Asc;
+
+            Query query = NativeQuery.builder()
+                    .withQuery(q -> q.matchAll(m -> m))
+                    .withSort(s -> s
+                            .field(f -> f
+                                    .field("views")
+                                    .order(order)
+                            )
                     )
                     .withPageable(PageRequest.of(page, size))
                     .build();

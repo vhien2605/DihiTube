@@ -1,4 +1,4 @@
-package com.pm.searchservice.application.searchTitle;
+package com.pm.searchservice.application;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
