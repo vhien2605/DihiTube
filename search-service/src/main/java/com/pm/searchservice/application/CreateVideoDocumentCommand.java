@@ -1,0 +1,20 @@
+package com.pm.searchservice.application;
+
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.List;
+
+@Getter
+@Setter
+@Builder
+public class CreateVideoDocumentCommand {
+    private String id;
+    private String title;
+    private String description;
+    private List<String> genre;
+    private Long views;
+    private String thumbnailUrl;
+
+}
