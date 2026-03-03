@@ -11,7 +11,6 @@ import java.time.Instant;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ASingleFileResponse {
-    private String id;
     private String fileName;
     private Long size;
     private String storageKey;

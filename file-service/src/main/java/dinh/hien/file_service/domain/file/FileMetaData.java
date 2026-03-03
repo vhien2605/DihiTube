@@ -19,13 +19,13 @@ public class FileMetaData {
     private final FileType type;
     private final Instant createdAt;
     private final Boolean isPrivateFile;
-    
+
     public static FileMetaData of(
-            FileId id,
             String fileName,
             FileSize size,
             String contentType,
-            String storageKey
+            String storageKey,
+            Instant createdAt
     ) {
         if (contentType == null || contentType.isBlank()) {
             throw new DomainException(DError.FILE_CONTENT_TYPE_INVALID);
@@ -44,14 +44,18 @@ public class FileMetaData {
             isPrivate = true;
         }
         return new FileMetaData(
-                id,
+                FileId.generate(),
                 fileName,
                 size,
                 contentType,
                 storageKey,
                 type,
-                Instant.now(),
+                createdAt,
                 isPrivate
         );
+    }
+
+    public boolean isVideoResource() {
+        return this.getType().equals(FileType.VIDEO);
     }
 }
