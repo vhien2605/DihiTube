@@ -1,5 +1,6 @@
 package com.pm.searchservice.infra;
 
+import co.elastic.clients.elasticsearch._types.FieldValue;
 import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.TextQueryType;
 import com.pm.searchservice.domain.VideoDocument;
@@ -14,6 +15,7 @@ import org.springframework.data.elasticsearch.core.query.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Repository
@@ -67,6 +69,42 @@ public class VideoSearchImpl implements VideoSearchRepository {
             SearchHits<VideoDocument> hits = elasticsearchOperations.search(query, VideoDocument.class);
 
             return hits.stream()
+                    .map(SearchHit::getContent)
+                    .toList();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public List<VideoDocument> filterByGenres(List<String> genres, int page, int size) {
+        try {
+            if (genres == null || genres.isEmpty()) {
+                return List.of();
+            }
+
+            Query query = NativeQuery.builder()
+                    .withQuery(q -> q
+                            .bool(b -> {
+                                genres.forEach(g ->
+                                        b.must(m -> m
+                                                .term(t -> t
+                                                        .field("genre")
+                                                        .value(g)
+                                                )
+                                        )
+                                );
+                                return b;
+                            })
+                    )
+                    .withPageable(PageRequest.of(page, size))
+                    .build();
+
+            SearchHits<VideoDocument> hits =
+                    elasticsearchOperations.search(query, VideoDocument.class);
+
+            return hits.getSearchHits()
+                    .stream()
                     .map(SearchHit::getContent)
                     .toList();
         } catch (Exception e) {

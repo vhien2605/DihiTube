@@ -1,6 +1,7 @@
 package com.pm.searchservice.adapter.api;
 
 import com.pm.searchservice.adapter.dto.request.CreateVideoDocumentRequest;
+import com.pm.searchservice.adapter.dto.request.FilterGenresRequest;
 import com.pm.searchservice.adapter.dto.request.SearchTitleRequest;
 import com.pm.searchservice.adapter.dto.response.ApiSuccessResponse;
 import com.pm.searchservice.adapter.dto.response.search.SearchResponseDto;
@@ -52,6 +53,19 @@ public class SearchController {
         ApiSuccessResponse<List<SearchResponseDto>> res =
                 ApiSuccessResponse.<List<SearchResponseDto>>builder()
                         .message("Search by title successfully!")
+                        .data(SearchMapper.toSearchResponse(response))
+                        .build();
+
+        return ResponseEntity.ok(res);
+    }
+
+    @GetMapping("/genres")
+    public ResponseEntity<ApiSuccessResponse<List<SearchResponseDto>>> filterByGenres(@RequestBody FilterGenresRequest request) {
+        List<SearchResultResponse> response = searchTitleUseCase.filterByGenres(request);
+
+        ApiSuccessResponse<List<SearchResponseDto>> res =
+                ApiSuccessResponse.<List<SearchResponseDto>>builder()
+                        .message("Filter by  successfully!")
                         .data(SearchMapper.toSearchResponse(response))
                         .build();
 
