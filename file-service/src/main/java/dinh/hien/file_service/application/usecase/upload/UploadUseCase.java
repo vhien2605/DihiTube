@@ -2,7 +2,6 @@ package dinh.hien.file_service.application.usecase.upload;
 
 import dinh.hien.file_service.domain.file.IFileService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.mongodb.core.aggregation.ArithmeticOperators;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,7 +16,6 @@ public class UploadUseCase {
         var domainResult = fileService.uploadPreparation(command);
         List<ASingleFileResponse> responses = domainResult.getData().stream()
                 .map(d -> ASingleFileResponse.builder()
-                        .id(d.getMetaData().getId().getValue().toString())
                         .size(d.getMetaData().getSize().getValue())
                         .createdAt(d.getMetaData().getCreatedAt())
                         .fileName(d.getMetaData().getFileName())

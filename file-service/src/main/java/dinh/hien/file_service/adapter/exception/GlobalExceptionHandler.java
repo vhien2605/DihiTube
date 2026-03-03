@@ -20,7 +20,10 @@ public class GlobalExceptionHandler {
     private static final Map<Integer, HttpStatus> httpStatusMap = Map.of(
             1000, HttpStatus.BAD_REQUEST,
             1001, HttpStatus.BAD_REQUEST,
-            1002, HttpStatus.BAD_REQUEST
+            1002, HttpStatus.BAD_REQUEST,
+            1003, HttpStatus.BAD_REQUEST,
+            1004, HttpStatus.INTERNAL_SERVER_ERROR,
+            1005, HttpStatus.INTERNAL_SERVER_ERROR
     );
 
 

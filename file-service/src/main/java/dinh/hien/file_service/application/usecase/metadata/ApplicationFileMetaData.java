@@ -1,7 +1,6 @@
-package dinh.hien.file_service.adapter.dto.response;
+package dinh.hien.file_service.application.usecase.metadata;
 
 import lombok.*;
-
 
 import java.time.Instant;
 
@@ -10,13 +9,10 @@ import java.time.Instant;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class SingleFileResponse {
+public class ApplicationFileMetaData {
     private String fileName;
     private Long size;
     private String storageKey;
     private String contentType;
     private Instant createdAt;
-    private Boolean isPrivateFile;
-
-    private String presignUrl;
 }
