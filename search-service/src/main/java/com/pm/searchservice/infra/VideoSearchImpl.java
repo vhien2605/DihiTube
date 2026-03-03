@@ -52,14 +52,15 @@ public class VideoSearchImpl implements VideoSearchRepository {
     }
 
     @Override
-    public List<VideoDocument> autoComplete(String keyword, int page, int size) {
+    public List<VideoDocument> autoComplete(String keyword, int size) {
         try {
             Query query = NativeQuery.builder()
                     .withQuery(q -> q
                             .match(m -> m
-                                    .query(keyword)
                                     .field("title.autocomplete")
-                                    .type(TextQueryType.BoolPrefix)))
+                                    .query(keyword)
+                            )
+                    )
                     .withPageable(PageRequest.of(0, size))
                     .build();
 

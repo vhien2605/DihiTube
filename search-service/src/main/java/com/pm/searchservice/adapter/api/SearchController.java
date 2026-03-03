@@ -43,4 +43,18 @@ public class SearchController {
 
         return ResponseEntity.ok(res);
     }
+
+    @GetMapping("/autocomplete")
+    public ResponseEntity<ApiSuccessResponse<List<SearchResponseDto>>> search(@RequestParam String keyword,
+                                                                              @RequestParam(defaultValue = "10") int size) {
+        List<SearchResultResponse> response = searchTitleUseCase.autoComplete(keyword, size);
+
+        ApiSuccessResponse<List<SearchResponseDto>> res =
+                ApiSuccessResponse.<List<SearchResponseDto>>builder()
+                        .message("Search by title successfully!")
+                        .data(SearchMapper.toSearchResponse(response))
+                        .build();
+
+        return ResponseEntity.ok(res);
+    }
 }
