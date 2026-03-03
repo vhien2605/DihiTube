@@ -6,13 +6,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-import java.util.List;
-
 @Getter
 @SuperBuilder
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class FileUploadRequestDTO {
-    private List<SingleFileRequestInfo> files;
+public class SingleFileRequestInfo {
+    private String fileName;
+    private String contentType;
+    private Long size;
 }
