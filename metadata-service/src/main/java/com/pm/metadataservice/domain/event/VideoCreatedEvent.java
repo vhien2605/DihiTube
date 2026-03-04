@@ -1,15 +1,14 @@
-package com.pm.searchservice.adapter.dto.request;
+package com.pm.metadataservice.domain.event;
 
 import lombok.*;
 
 import java.util.List;
 
 @Getter
-@Setter
-@Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class CreateVideoDocumentRequest {
+@NoArgsConstructor
+@Builder
+public class VideoCreatedEvent {
     private String id;
     private String title;
     private String description;

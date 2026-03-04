@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/search")
+@RequestMapping
 @RequiredArgsConstructor
 public class FilterController {
     private final CreateIndexUseCase service;
