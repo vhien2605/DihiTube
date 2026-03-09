@@ -10,7 +10,7 @@ services:
     networks:
       - dihi-tube
     volumes:
-      - C:/learning_code/web/microservice/persistence/identity-db:/var/lib/mysql
+      - E:/learning_code/web/microservice/persistence/identity-db:/var/lib/mysql
   redis:
     image: redis:latest
     container_name: redis
@@ -21,7 +21,7 @@ services:
       --requirepass hienhien123@
       --appendonly yes
     volumes:
-      - C:/learning_code/web/microservice/persistence/redis:/data
+      - E:/learning_code/web/microservice/persistence/redis:/data
   metadata-service-db:
     container_name: metadata-service-db
     image: mysql:latest
@@ -33,7 +33,7 @@ services:
     networks:
       - dihi-tube
     volumes:
-      - C:/learning_code/web/microservice/persistence/metadata-db:/var/lib/mysql
+      - E:/learning_code/web/microservice/persistence/metadata-db:/var/lib/mysql
   profile-service-db:
     container_name: profile-service-db
     image: mysql:latest
@@ -45,7 +45,7 @@ services:
     networks:
       - dihi-tube
     volumes:
-      - C:/learning_code/web/microservice/persistence/profile-db:/var/lib/mysql
+      - E:/learning_code/web/microservice/persistence/profile-db:/var/lib/mysql
   file-service-db:
     container_name: file-service-db
     image: bitnami/mongodb:latest
@@ -58,7 +58,7 @@ services:
     networks:
       - dihi-tube
     volumes:
-      - C:/learning_code/web/microservice/persistence/file-db:/bitnami/mongodb
+      - E:/learning_code/web/microservice/persistence/file-db:/bitnami/mongodb
   kafka:
     container_name: kafka
     image: apache/kafka:4.1.1
