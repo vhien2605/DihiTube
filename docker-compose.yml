@@ -10,7 +10,7 @@ services:
     networks:
       - dihi-tube
     volumes:
-      - C:/learning_code/web/microservice/persistence/identity-db:/var/lib/mysql
+      - E:/learning_code/web/microservice/persistence/identity-db:/var/lib/mysql
   redis:
     image: redis:latest
     container_name: redis
@@ -21,7 +21,7 @@ services:
       --requirepass hienhien123@
       --appendonly yes
     volumes:
-      - C:/learning_code/web/microservice/persistence/redis:/data
+      - E:/learning_code/web/microservice/persistence/redis:/data
   metadata-service-db:
     container_name: metadata-service-db
     image: mysql:latest
@@ -33,7 +33,7 @@ services:
     networks:
       - dihi-tube
     volumes:
-      - C:/learning_code/web/microservice/persistence/metadata-db:/var/lib/mysql
+      - E:/learning_code/web/microservice/persistence/metadata-db:/var/lib/mysql
   profile-service-db:
     container_name: profile-service-db
     image: mysql:latest
@@ -45,7 +45,7 @@ services:
     networks:
       - dihi-tube
     volumes:
-      - C:/learning_code/web/microservice/persistence/profile-db:/var/lib/mysql
+      - E:/learning_code/web/microservice/persistence/profile-db:/var/lib/mysql
   file-service-db:
     container_name: file-service-db
     image: bitnami/mongodb:latest
@@ -58,7 +58,7 @@ services:
     networks:
       - dihi-tube
     volumes:
-      - C:/learning_code/web/microservice/persistence/file-db:/bitnami/mongodb
+      - E:/learning_code/web/microservice/persistence/file-db:/bitnami/mongodb
   kafka:
     container_name: kafka
     image: apache/kafka:4.1.1
@@ -93,7 +93,36 @@ services:
     restart: unless-stopped
     networks:
       - dihi-tube
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:9.2.3
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+    networks:
+      - dihi-tube
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:9.2.3
+    container_name: kibana
+    depends_on:
+      - elasticsearch
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    ports:
+      - "5601:5601"
+    networks:
+      - dihi-tube
 networks:
   dihi-tube:
     name: dihi-tube
     external: true #khi ma network da co roi , khong cho tao nua
+
+volumes:
+  esdata:
