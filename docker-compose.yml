@@ -11,6 +11,18 @@ services:
       - dihi-tube
     volumes:
       - E:/learning_code/web/microservice/persistence/identity-db:/var/lib/mysql
+  payment-service-db:
+    container_name: payment-service-db
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: hienhien123@
+      MYSQL_DATABASE: dihitube-payment-db
+    ports:
+      - "3311:3306"
+    networks:
+      - dihi-tube
+    volumes:
+      - E:/learning_code/web/microservice/persistence/payment-db:/var/lib/mysql
   redis:
     image: redis:latest
     container_name: redis
@@ -52,7 +64,7 @@ services:
     environment:
       MONGODB_ROOT_USER: root
       MONGODB_ROOT_PASSWORD: hienhien123@
-      MONGODB_DATABASE: profile-db
+      MONGODB_DATABASE: file-db
     ports:
       - "27019:27017"
     networks:
