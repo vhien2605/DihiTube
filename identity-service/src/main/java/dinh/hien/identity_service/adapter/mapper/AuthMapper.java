@@ -1,5 +1,6 @@
 package dinh.hien.identity_service.adapter.mapper;
 
+import dinh.hien.identity_service.adapter.dto.request.ChangePasswordRequestDTO;
 import dinh.hien.identity_service.adapter.dto.request.IntrospectRequestDTO;
 import dinh.hien.identity_service.adapter.dto.request.LoginRequestDTO;
 import dinh.hien.identity_service.adapter.dto.request.RegisterRequestDTO;
@@ -10,6 +11,7 @@ import dinh.hien.identity_service.application.usecase.introspect.IntrospectComma
 import dinh.hien.identity_service.application.usecase.introspect.IntrospectResult;
 import dinh.hien.identity_service.application.usecase.login.LoginCommand;
 import dinh.hien.identity_service.application.usecase.login.LoginResult;
+import dinh.hien.identity_service.application.usecase.password.ChangePasswordCommand;
 import dinh.hien.identity_service.application.usecase.register.FailCommand;
 import dinh.hien.identity_service.application.usecase.register.RegisterCommand;
 
@@ -52,6 +54,14 @@ public class AuthMapper {
         return IntrospectResponseDTO.builder()
                 .isValid(result.isValid())
                 .message(result.getMessage())
+                .build();
+    }
+
+    public static ChangePasswordCommand toChangePasswordCommand(ChangePasswordRequestDTO dto, String token) {
+        return ChangePasswordCommand.builder()
+                .token(token)
+                .oldPassword(dto.getOldPassword())
+                .newPassword(dto.getNewPassword())
                 .build();
     }
 }

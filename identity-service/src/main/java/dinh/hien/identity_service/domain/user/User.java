@@ -16,9 +16,25 @@ public class User {
     private Email email;
     private Role role;
 
-    public void authenticatePassword(String rawPassword,PasswordHasher passwordHasher){
-       if(!passwordHasher.matches(rawPassword,password.getHashValue())){
-           throw new DomainException(DError.PASSWORD_INVALID);
-       }
+    public void authenticatePassword(String rawPassword, PasswordHasher passwordHasher) {
+        if (!passwordHasher.matches(rawPassword, password.getHashValue())) {
+            throw new DomainException(DError.PASSWORD_INVALID);
+        }
     }
+
+    public void changePassword(
+            String oldPassword,
+            String newPassword,
+            PasswordHasher passwordHasher
+    ) {
+        if (!passwordHasher.matches(oldPassword, this.password.getHashValue())) {
+            throw new DomainException(DError.PASSWORD_INVALID);
+        }
+        if (passwordHasher.matches(newPassword, this.password.getHashValue())) {
+            throw new DomainException(DError.PASSWORD_MUST_BE_DIFFERENT);
+        }
+        String newHashedPassword = passwordHasher.hash(newPassword);
+        this.password = Password.of(newHashedPassword);
+    }
+
 }

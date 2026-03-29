@@ -1,9 +1,6 @@
 package dinh.hien.identity_service.adapter.api;
 
-import dinh.hien.identity_service.adapter.dto.request.IntrospectRequestDTO;
-import dinh.hien.identity_service.adapter.dto.request.LoginRequestDTO;
-import dinh.hien.identity_service.adapter.dto.request.RefreshRequestDTO;
-import dinh.hien.identity_service.adapter.dto.request.RegisterRequestDTO;
+import dinh.hien.identity_service.adapter.dto.request.*;
 import dinh.hien.identity_service.adapter.dto.response.ApiSuccessResponse;
 import dinh.hien.identity_service.adapter.dto.response.auth.IntrospectResponseDTO;
 import dinh.hien.identity_service.adapter.dto.response.auth.JwtResponseDTO;
@@ -13,6 +10,8 @@ import dinh.hien.identity_service.application.usecase.introspect.IntrospectUseCa
 import dinh.hien.identity_service.application.usecase.login.UserLoginUseCase;
 import dinh.hien.identity_service.application.usecase.logout.LogoutCommand;
 import dinh.hien.identity_service.application.usecase.logout.LogoutUseCase;
+import dinh.hien.identity_service.application.usecase.password.ChangePasswordCommand;
+import dinh.hien.identity_service.application.usecase.password.ChangePasswordUseCase;
 import dinh.hien.identity_service.application.usecase.refresh.RefreshCommand;
 import dinh.hien.identity_service.application.usecase.refresh.UserTokenRefreshUseCase;
 import dinh.hien.identity_service.application.usecase.register.RegisterCommand;
@@ -31,6 +30,7 @@ public class AuthController {
     private final UserTokenRefreshUseCase userTokenRefreshUseCase;
     private final LogoutUseCase logoutUseCase;
     private final IntrospectUseCase introspectUseCase;
+    private final ChangePasswordUseCase changePasswordUseCase;
 
     @PostMapping("/login")
     public ResponseEntity<ApiSuccessResponse<JwtResponseDTO>> login(
@@ -103,6 +103,26 @@ public class AuthController {
                 ApiSuccessResponse.<IntrospectResponseDTO>builder()
                         .message("introspect token result sent")
                         .data(AuthMapper.toIntrospectResponse(introspectUseCase.introspect(command)))
+                        .build();
+        return ResponseEntity.ok(response);
+    }
+
+
+    @PutMapping("/password")
+    public ResponseEntity<ApiSuccessResponse<String>> changePassword(
+            @RequestBody ChangePasswordRequestDTO request,
+            HttpServletRequest httpRequest) {
+        //get token from Authorization header
+        String bearerToken = httpRequest.getHeader("Authorization");
+        String accessToken = "";
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            accessToken = bearerToken.substring(7);
+        }
+        ChangePasswordCommand command = AuthMapper.toChangePasswordCommand(request, accessToken);
+        ApiSuccessResponse<String> response =
+                ApiSuccessResponse.<String>builder()
+                        .message("changed password")
+                        .data(changePasswordUseCase.password(command))
                         .build();
         return ResponseEntity.ok(response);
     }
