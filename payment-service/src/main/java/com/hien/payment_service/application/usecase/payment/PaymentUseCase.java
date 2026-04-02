@@ -14,10 +14,12 @@ public class PaymentUseCase {
     public String payment(PaymentCommand paymentCommand) {
         Payment payment = Payment.create(Money.of(paymentCommand.getAmount(), Currency.valueOf(paymentCommand.getCurrency()))
                 , paymentCommand.getDescription(),
-                UserId.of(paymentCommand.getUserId())
+                UserId.of(paymentCommand.getUserId()),
+                paymentCommand.getSubscriptionType()
         );
         return paymentService.createPayment(
                 payment,
+                paymentCommand.getSubscriptionType(),
                 paymentCommand.getIpAddress()
         );
     }

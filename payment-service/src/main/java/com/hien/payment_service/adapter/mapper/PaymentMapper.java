@@ -29,6 +29,7 @@ public class PaymentMapper {
                 .description(dto.getDescription().trim())
                 .ipAddress(ipAdress)
                 .userId(userId)
+                .subscriptionType(dto.getSubscriptionType())
                 .build();
     }
 

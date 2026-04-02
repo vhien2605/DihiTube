@@ -45,6 +45,9 @@ public class JpaPayment {
     @Size(max = 100)
     private String transactionRef;
 
+    @NotBlank
+    private String subscriptionType;
+
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

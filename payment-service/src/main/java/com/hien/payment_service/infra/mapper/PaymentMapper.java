@@ -24,6 +24,7 @@ public class PaymentMapper {
                 .status(payment.getStatus().name())
                 .userId(payment.getUserId().getValue().toString())
                 .transactionRef(payment.getTransactionRef())
+                .subscriptionType(payment.getSubscriptionType())
                 .createdAt(payment.getCreatedAt())
                 .updatedAt(payment.getUpdatedAt())
                 .build();
@@ -41,7 +42,7 @@ public class PaymentMapper {
         UserId userId = UserId.of(UUID.fromString(jpaPayment.getUserId()));
         PaymentStatus status = PaymentStatus.valueOf(jpaPayment.getStatus());
 
-        Payment payment = Payment.of(paymentId, money, jpaPayment.getDescription(), status, userId);
+        Payment payment = Payment.of(paymentId, money, jpaPayment.getDescription(), status, userId, jpaPayment.getSubscriptionType());
         payment.setTransactionRef(jpaPayment.getTransactionRef());
 
         return payment;

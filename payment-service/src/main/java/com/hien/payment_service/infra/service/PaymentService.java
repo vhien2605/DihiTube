@@ -3,8 +3,9 @@ package com.hien.payment_service.infra.service;
 import com.hien.payment_service.domain.exception.DError;
 import com.hien.payment_service.domain.exception.DomainException;
 import com.hien.payment_service.domain.payment.IPaymentService;
-import com.hien.payment_service.domain.payment.Money;
 import com.hien.payment_service.domain.payment.Payment;
+import com.hien.payment_service.domain.payment.StatusDomainResult;
+import com.hien.payment_service.domain.payment.UserId;
 import com.hien.payment_service.infra.config.VnPayConfig;
 import com.hien.payment_service.infra.exception.InfraError;
 import com.hien.payment_service.infra.exception.InfraException;
@@ -30,7 +31,7 @@ public class PaymentService implements IPaymentService {
 
     @Override
     @Transactional
-    public String createPayment(Payment payment, String ipAddress) {
+    public String createPayment(Payment payment, String subscriptionType, String ipAddress) {
         if (!"VND".equals(payment.getAmount().getCurrency().getCode())) {
             throw new IllegalArgumentException("VNPay only supports VND");
         }
@@ -57,7 +58,7 @@ public class PaymentService implements IPaymentService {
 
     @Override
     @Transactional
-    public void handleSuccess(Map<String, String> params) {
+    public StatusDomainResult handleStatus(Map<String, String> params) {
         String receivedHash = params.get("vnp_SecureHash");
         params.remove("vnp_SecureHash");
         params.remove("vnp_SecureHashType");
@@ -75,7 +76,9 @@ public class PaymentService implements IPaymentService {
 
         JpaPayment jpaPayment = jpaPaymentRepository.findByTransactionRef(txnRef)
                 .orElseThrow(() -> new DomainException(DError.PAYMENT_NOT_FOUND));
-        if ("00".equals(responseCode)) {
+
+        boolean isSuccess = "00".equals(responseCode);
+        if (isSuccess) {
             log.info("Payment SUCCESS: {}", txnRef);
             jpaPayment.setStatus("SUCCESS");
         } else {
@@ -85,5 +88,11 @@ public class PaymentService implements IPaymentService {
         //validate domain
         Payment payment = PaymentMapper.toDomainEntity(jpaPayment);
         jpaPaymentRepository.save(jpaPayment);
+
+        return new StatusDomainResult(
+                isSuccess,
+                jpaPayment.getSubscriptionType(),
+                UserId.of(jpaPayment.getUserId())
+        );
     }
 }
