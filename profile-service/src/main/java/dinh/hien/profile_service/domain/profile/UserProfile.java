@@ -28,4 +28,8 @@ public class UserProfile {
                 SubscriptionType.STANDARD
         );
     }
+
+    public void updateSubscription(Subscription subscription) {
+        this.subscription = subscription;
+    }
 }

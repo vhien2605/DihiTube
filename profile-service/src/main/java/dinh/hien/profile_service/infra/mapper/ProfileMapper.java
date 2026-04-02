@@ -8,15 +8,9 @@ import dinh.hien.profile_service.domain.subscription.Subscription;
 import dinh.hien.profile_service.domain.subscription.SubscriptionId;
 import dinh.hien.profile_service.domain.subscription.SubscriptionType;
 import dinh.hien.profile_service.infra.model.JpaProfile;
+import dinh.hien.profile_service.infra.model.JpaSubscription;
 
 public class ProfileMapper {
-//    private ProfileId id;
-//    private UserId userId;
-//    private String displayName;
-//    private String avatarUrl;
-//    private PhoneNumber phoneNumber;
-//    private Subscription subscription;
-
     public static UserProfile toDomainProfile(JpaProfile jpaProfile) {
         return new UserProfile(
                 ProfileId.of(jpaProfile.getId()),
@@ -29,5 +23,19 @@ public class ProfileMapper {
                         SubscriptionType.valueOf(jpaProfile.getSubscription().getType().toUpperCase())
                 )
         );
+    }
+
+    public static JpaProfile toJpaProfile(UserProfile userProfile) {
+        return JpaProfile.builder()
+                .id(userProfile.getId().getValue().toString())
+                .userId(userProfile.getUserId().getValue().toString())
+                .displayName(userProfile.getDisplayName())
+                .avatarUrl(userProfile.getAvatarUrl())
+                .phoneNumber(userProfile.getPhoneNumber().getValue())
+                .subscription(JpaSubscription.builder()
+                        .id(userProfile.getSubscription().getId().getValue().toString())
+                        .type(userProfile.getSubscription().getType().name().toLowerCase())
+                        .build())
+                .build();
     }
 }

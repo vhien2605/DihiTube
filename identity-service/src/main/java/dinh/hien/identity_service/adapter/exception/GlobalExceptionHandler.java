@@ -28,7 +28,8 @@ public class GlobalExceptionHandler {
             Map.entry(1007, HttpStatus.BAD_REQUEST),
             Map.entry(1008, HttpStatus.BAD_REQUEST),
             Map.entry(1010, HttpStatus.BAD_REQUEST),
-            Map.entry(1011, HttpStatus.UNAUTHORIZED)
+            Map.entry(1011, HttpStatus.UNAUTHORIZED),
+            Map.entry(1012, HttpStatus.UNAUTHORIZED)
     );
 
     @ExceptionHandler({DomainException.class})
