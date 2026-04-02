@@ -1,13 +1,11 @@
 package dinh.hien.profile_service.infra.model;
 
 
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.*;
-
 
 
 @Setter
@@ -23,4 +21,7 @@ public class JpaSubscription {
 
     @Column(name = "type", unique = true)
     private String type;
+
+    @Column(name = "amount")
+    private Long amount;
 }

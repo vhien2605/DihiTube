@@ -10,13 +10,6 @@ import dinh.hien.profile_service.domain.subscription.SubscriptionType;
 import dinh.hien.profile_service.infra.model.JpaProfile;
 
 public class ProfileMapper {
-//    private ProfileId id;
-//    private UserId userId;
-//    private String displayName;
-//    private String avatarUrl;
-//    private PhoneNumber phoneNumber;
-//    private Subscription subscription;
-
     public static UserProfile toDomainProfile(JpaProfile jpaProfile) {
         return new UserProfile(
                 ProfileId.of(jpaProfile.getId()),
