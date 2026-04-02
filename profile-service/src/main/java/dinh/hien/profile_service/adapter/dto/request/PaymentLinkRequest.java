@@ -19,5 +19,6 @@ public class PaymentLinkRequest implements Serializable {
     private BigDecimal amount;
     private String currency;
     private String description;
+    private String subscriptionType;
 }
 

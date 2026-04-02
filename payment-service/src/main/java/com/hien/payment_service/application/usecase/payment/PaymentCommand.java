@@ -15,4 +15,5 @@ public class PaymentCommand {
     private String description;
     private String ipAddress;
     private String userId;
+    private String subscriptionType;
 }

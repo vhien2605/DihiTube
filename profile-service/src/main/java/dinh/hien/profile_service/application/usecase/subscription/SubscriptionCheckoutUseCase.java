@@ -47,12 +47,13 @@ public class SubscriptionCheckoutUseCase {
         return paymentLink;
     }
 
-  
+
     private String callPaymentServiceForLink(SubscriptionType subscriptionType) {
         PaymentLinkRequest request = PaymentLinkRequest.builder()
                 .amount(BigDecimal.valueOf(subscriptionType.getPrice()))
                 .currency("VND")
                 .description("Checkout out for subscription " + subscriptionType.name())
+                .subscriptionType(subscriptionType.name())
                 .build();
         var response = paymentClient.getPaymentLink(request);
         if (response == null || response.getBody() == null || response.getBody().getData().isEmpty()) {

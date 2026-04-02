@@ -28,7 +28,6 @@ public class PaymentController {
     public ResponseEntity<ApiSuccessResponse<String>> payment(
             @RequestBody PaymentRequestDTO dto,
             HttpServletRequest request
-
     ) {
         String ipAdress;
         try {

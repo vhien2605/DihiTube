@@ -16,26 +16,28 @@ public class Payment {
     private final UserId userId;
     @Setter
     private String transactionRef;
+    private String subscriptionType;
     private final LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    private Payment(PaymentId id, Money amount, String description, PaymentStatus status, UserId userId) {
+    private Payment(PaymentId id, Money amount, String description, PaymentStatus status, UserId userId, String subscriptionType) {
         validate(amount, description);
         this.id = id;
         this.amount = amount;
         this.description = description;
         this.status = status;
         this.userId = userId;
+        this.subscriptionType = subscriptionType;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }
 
-    public static Payment create(Money amount, String description, UserId userId) {
-        return new Payment(PaymentId.generate(), amount, description, PaymentStatus.PROCESSING, userId);
+    public static Payment create(Money amount, String description, UserId userId, String subscriptionType) {
+        return new Payment(PaymentId.generate(), amount, description, PaymentStatus.PROCESSING, userId, subscriptionType);
     }
 
-    public static Payment of(PaymentId id, Money amount, String description, PaymentStatus status, UserId userId) {
-        return new Payment(id, amount, description, status, userId);
+    public static Payment of(PaymentId id, Money amount, String description, PaymentStatus status, UserId userId, String subscriptionType) {
+        return new Payment(id, amount, description, status, userId, subscriptionType);
     }
 
     private static void validate(Money amount, String description) {
