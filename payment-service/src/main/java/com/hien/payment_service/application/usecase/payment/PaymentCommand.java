@@ -14,4 +14,5 @@ public class PaymentCommand {
     private String currency;
     private String description;
     private String ipAddress;
+    private String userId;
 }

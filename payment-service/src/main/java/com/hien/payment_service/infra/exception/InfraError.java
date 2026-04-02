@@ -13,7 +13,7 @@ public enum InfraError {
     JWT_INVALID(1004, "token invalid"),
     JWT_EXPIRED(1005, "Token expired"),
     TOKEN_DISABLE(1011, "Token is disabled"),
-    ;
+    VN_PAY_ERROR(1012, "vnpay error");
     private final int code;
     private final String message;
 }

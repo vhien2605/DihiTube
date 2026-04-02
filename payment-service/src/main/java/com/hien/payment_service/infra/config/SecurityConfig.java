@@ -24,7 +24,7 @@ public class SecurityConfig {
 
 
     private final String[] WHITE_LIST = {
-
+            "/vnpay/return"
     };
 
 

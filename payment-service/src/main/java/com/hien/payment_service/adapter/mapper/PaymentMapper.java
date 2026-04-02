@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 
 @Component
 public class PaymentMapper {
-    public PaymentCommand mapToPaymentCommand(PaymentRequestDTO dto, String ipAdress) {
+    public PaymentCommand mapToPaymentCommand(PaymentRequestDTO dto, String ipAdress, String userId) {
         // Validate amount
         if (dto.getAmount() == null || dto.getAmount().compareTo(BigDecimal.ZERO) <= 0) {
             throw new ApplicationException(AError.AMOUNT_INVALID);
@@ -28,6 +28,7 @@ public class PaymentMapper {
                 .currency(currencyCode)
                 .description(dto.getDescription().trim())
                 .ipAddress(ipAdress)
+                .userId(userId)
                 .build();
     }
 

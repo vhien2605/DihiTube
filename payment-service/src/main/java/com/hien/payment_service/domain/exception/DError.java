@@ -14,8 +14,9 @@ public enum DError {
     PAYMENT_NOT_FOUND(1004, "Payment not found"),
     CURRENCY_INVALID(1005, "Currency is invalid or not supported"),
     AMOUNT_INVALID(1006, "Amount must be greater than zero"),
-    DESCRIPTION_REQUIRED(1007, "Description is required and cannot be empty");
-    
+    DESCRIPTION_REQUIRED(1007, "Description is required and cannot be empty"),
+    ID_INVALID(1008, "ID is invalid");
+
     private final int code;
     private final String message;
 }

@@ -1,88 +1,89 @@
 package com.hien.payment_service.infra.service;
 
+import com.hien.payment_service.domain.exception.DError;
+import com.hien.payment_service.domain.exception.DomainException;
 import com.hien.payment_service.domain.payment.IPaymentService;
 import com.hien.payment_service.domain.payment.Money;
+import com.hien.payment_service.domain.payment.Payment;
 import com.hien.payment_service.infra.config.VnPayConfig;
+import com.hien.payment_service.infra.exception.InfraError;
+import com.hien.payment_service.infra.exception.InfraException;
+import com.hien.payment_service.infra.mapper.PaymentMapper;
+import com.hien.payment_service.infra.model.JpaPayment;
+import com.hien.payment_service.infra.repository.JpaPaymentRepository;
 import com.hien.payment_service.infra.util.VNPayUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Map;
-import java.util.TreeMap;
+
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PaymentService implements IPaymentService {
     private final VnPayConfig vnPayConfig;
+    private final JpaPaymentRepository jpaPaymentRepository;
 
     @Override
-    public String createPayment(Money amount, String description, String ipAddress) {
-        if (!"VND".equals(amount.getCurrency().getCode())) {
+    @Transactional
+    public String createPayment(Payment payment, String ipAddress) {
+        if (!"VND".equals(payment.getAmount().getCurrency().getCode())) {
             throw new IllegalArgumentException("VNPay only supports VND");
         }
-        long vnAmount = amount.getAmount()
+        // create payment processing
+        payment.setTransactionRef(VNPayUtil.getRandomNumber(8));
+        JpaPayment jpaPayment = PaymentMapper.toJpaEntity(payment);
+        jpaPaymentRepository.save(jpaPayment);
+
+        //build vnpay url
+        long vnAmount = payment.getAmount().getAmount()
                 .multiply(BigDecimal.valueOf(100))
                 .longValue();
         Map<String, String> vnpParamsMap = vnPayConfig.getVNPayConfig();
         vnpParamsMap.put("vnp_Amount", String.valueOf(vnAmount));
         vnpParamsMap.put("vnp_IpAddr", ipAddress);
-
-        // 1. Build query url (ĐÃ CÓ URL ENCODE)
+        vnpParamsMap.put("vnp_TxnRef", payment.getTransactionRef());
         String queryUrl = VNPayUtil.getPaymentURL(vnpParamsMap, true);
-
-        // 2. Build hashData (SỬA LỖI Ở ĐÂY: Sử dụng luôn queryUrl vì nó đã được URL Encode chuẩn xác)
         String hashData = queryUrl;
-
-        // 3. Tạo chữ ký bảo mật
         String vnpSecureHash = VNPayUtil.hmacSHA512(vnPayConfig.getSecretKey(), hashData);
         queryUrl += "&vnp_SecureHash=" + vnpSecureHash;
         String url = vnPayConfig.getVnp_PayUrl() + "?" + queryUrl;
-        
         return url;
     }
 
     @Override
+    @Transactional
     public void handleSuccess(Map<String, String> params) {
-        // 1. Lấy hash
         String receivedHash = params.get("vnp_SecureHash");
-
-        // 2. Remove các field không dùng để ký
         params.remove("vnp_SecureHash");
         params.remove("vnp_SecureHashType");
-
-        // 3. Build sign data (KHÔNG encode key)
-        String signData = VNPayUtil.getPaymentURL(params, false);
-
-        // 4. Tính lại hash
+        String signData = VNPayUtil.getPaymentURL(params, true);
         String calculatedHash = VNPayUtil.hmacSHA512(
                 vnPayConfig.getSecretKey(),
                 signData
         );
-
-        // 5. Validate chữ ký
         if (!calculatedHash.equalsIgnoreCase(receivedHash)) {
-            throw new RuntimeException("Invalid signature");
+            throw new InfraException(InfraError.VN_PAY_ERROR);
         }
-
-        // 6. Lấy data
+        // status code of vnpay
         String responseCode = params.get("vnp_ResponseCode");
         String txnRef = params.get("vnp_TxnRef");
-        String amount = params.get("vnp_Amount");
 
-        // 7. Business logic
+        JpaPayment jpaPayment = jpaPaymentRepository.findByTransactionRef(txnRef)
+                .orElseThrow(() -> new DomainException(DError.PAYMENT_NOT_FOUND));
         if ("00".equals(responseCode)) {
-            System.out.println("Payment SUCCESS: " + txnRef);
-            // TODO:
-            // - check order tồn tại
-            // - check chưa xử lý (idempotent)
-            // - verify amount
-            // - update SUCCESS
+            log.info("Payment SUCCESS: {}", txnRef);
+            jpaPayment.setStatus("SUCCESS");
         } else {
-            System.out.println("Payment FAILED: " + txnRef);
-
-            // TODO:
-            // update FAILED
+            log.info("Payment FAILED: {}", txnRef);
+            jpaPayment.setStatus("FAILED");
         }
+        //validate domain
+        Payment payment = PaymentMapper.toDomainEntity(jpaPayment);
+        jpaPaymentRepository.save(jpaPayment);
     }
 }

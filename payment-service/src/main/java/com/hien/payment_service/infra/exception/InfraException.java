@@ -7,8 +7,8 @@ import lombok.Getter;
 public class InfraException extends RuntimeException {
     private final InfraError error;
 
-    public InfraException(String message, InfraError error) {
-        super(message);
+    public InfraException(InfraError error) {
+        super(error.getMessage());
         this.error = error;
     }
 }
