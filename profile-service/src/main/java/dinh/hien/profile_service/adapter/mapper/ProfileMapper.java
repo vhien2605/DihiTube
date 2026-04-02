@@ -1,9 +1,11 @@
 package dinh.hien.profile_service.adapter.mapper;
 
+import dinh.hien.profile_service.adapter.dto.request.SubscriptionRequestDTO;
 import dinh.hien.profile_service.adapter.dto.response.profile.ProfileResponseDTO;
 import dinh.hien.profile_service.adapter.event.KafkaUserCreatedEvent;
 import dinh.hien.profile_service.application.usecase.profile.CreateProfileCommand;
 import dinh.hien.profile_service.application.usecase.readprofile.ReadProfileResult;
+import dinh.hien.profile_service.application.usecase.subscription.SubscriptionCommand;
 import org.springframework.context.annotation.Profile;
 
 public class ProfileMapper {
@@ -23,6 +25,12 @@ public class ProfileMapper {
                 .avatarUrl(readProfileResult.getAvatarUrl())
                 .subscription(readProfileResult.getSubscription())
                 .userId(readProfileResult.getUserId())
+                .build();
+    }
+
+    public static SubscriptionCommand toSubscriptionCommand(SubscriptionRequestDTO subscriptionRequestDTO) {
+        return SubscriptionCommand.builder()
+                .subscriptionType(subscriptionRequestDTO.getSubscriptionType())
                 .build();
     }
 }

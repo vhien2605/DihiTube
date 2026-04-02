@@ -23,7 +23,8 @@ public class GlobalExceptionHandler {
             1002, HttpStatus.BAD_REQUEST,
             1003, HttpStatus.BAD_REQUEST,
             1004, HttpStatus.BAD_REQUEST,
-            1005, HttpStatus.NOT_FOUND
+            1005, HttpStatus.NOT_FOUND,
+            1006, HttpStatus.NOT_FOUND
     );
 
     @ExceptionHandler({DomainException.class})
