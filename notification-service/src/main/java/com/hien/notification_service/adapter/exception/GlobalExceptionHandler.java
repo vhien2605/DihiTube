@@ -24,7 +24,7 @@ public class GlobalExceptionHandler {
             1004, HttpStatus.BAD_REQUEST,  // NOTIFICATION_STATUS_INVALID
             1005, HttpStatus.BAD_REQUEST,  // NOTIFICATION_TITLE_INVALID
             1006, HttpStatus.BAD_REQUEST,  // NOTIFICATION_CONTENT_INVALID
-            1007, HttpStatus.BAD_REQUEST   // NOTIFICATION_CREATED_AT_INVALID
+            1007, HttpStatus.BAD_REQUEST
     );
 
 

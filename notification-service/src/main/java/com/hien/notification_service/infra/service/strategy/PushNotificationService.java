@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 public class PushNotificationService implements NotificationStrategy {
-
     @Override
     public void sendNotification(Notification notification) {
         log.info("Sending PUSH notification to user: {}, title: {}",
