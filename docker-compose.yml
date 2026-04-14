@@ -71,6 +71,19 @@ services:
       - dihi-tube
     volumes:
       - E:/learning_code/web/microservice/persistence/file-db:/bitnami/mongodb
+  notification-service-db:
+    container_name: notification-service-db
+    image: bitnami/mongodb:latest
+    environment:
+      - MONGODB_ROOT_USER=root
+      - MONGODB_ROOT_PASSWORD=hienhien123@
+      - MONGODB_DATABASE=notification-db
+    ports:
+      - "27020:27017"
+    networks:
+      - dihi-tube
+    volumes:
+      - E:/learning_code/web/microservice/persistence/notification-db:/bitnami/mongodb
   kafka:
     container_name: kafka
     image: apache/kafka:4.1.1

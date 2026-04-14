@@ -2,9 +2,7 @@ package dinh.hien.profile_service.domain.profile;
 
 import dinh.hien.profile_service.domain.exception.DError;
 import dinh.hien.profile_service.domain.exception.DomainException;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.util.regex.Pattern;
 
