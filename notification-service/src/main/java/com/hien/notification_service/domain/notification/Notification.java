@@ -26,8 +26,7 @@ public class Notification {
             String recipientId,
             NotificationType type,
             String title,
-            String content,
-            NotificationStatus status
+            String content
     ) {
         // Validate recipientId
         if (recipientId == null) {
@@ -48,18 +47,13 @@ public class Notification {
         if (content == null || content.trim().isEmpty()) {
             throw new DomainException(DError.NOTIFICATION_CONTENT_INVALID);
         }
-
-        // Validate status
-        if (status == null) {
-            throw new DomainException(DError.NOTIFICATION_STATUS_INVALID);
-        }
         return new Notification(
                 NotificationId.generate(),
                 recipientId,
                 type,
                 title,
                 content,
-                status,
+                NotificationStatus.UNREAD,
                 Instant.now()
         );
     }

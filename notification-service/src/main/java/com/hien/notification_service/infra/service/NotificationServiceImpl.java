@@ -6,6 +6,7 @@ import com.hien.notification_service.infra.service.strategy.NotificationStrategy
 import com.hien.notification_service.infra.service.strategy.NotificationStrategyFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,7 +16,9 @@ public class NotificationServiceImpl implements ISenderService {
     private final NotificationStrategyFactory strategyFactory;
 
     @Override
+    @Async
     public void sendNotification(Notification notification) {
+        log.info("------------------------Noti run on Thread: {}", Thread.currentThread().getName());
         // Select strategy based on notification type
         NotificationStrategy strategy = strategyFactory.getStrategy(notification.getType());
         // Execute strategy
