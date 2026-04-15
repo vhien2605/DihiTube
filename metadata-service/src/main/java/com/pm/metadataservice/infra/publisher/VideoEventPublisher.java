@@ -14,9 +14,9 @@ public class VideoEventPublisher {
         kafkaTemplate.send("video.created", event)
                 .whenComplete((result, ex) -> {
                     if (ex == null) {
-                        System.out.println("✅ Sent message to topic video.created");
+                        System.out.println("Sent message to topic video.created");
                     } else {
-                        System.out.println("❌ Failed to send message: " + ex.getMessage());
+                        System.out.println("Failed to send message: " + ex.getMessage());
                     }
                 });
     }
