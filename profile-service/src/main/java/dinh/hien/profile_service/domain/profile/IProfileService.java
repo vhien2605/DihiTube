@@ -4,4 +4,5 @@ import java.util.Optional;
 
 public interface IProfileService {
     UserProfile readMyProfile();
+    boolean isMembership();
 }

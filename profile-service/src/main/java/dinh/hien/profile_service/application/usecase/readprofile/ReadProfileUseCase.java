@@ -21,4 +21,8 @@ public class ReadProfileUseCase {
                 .subscription(userProfile.getSubscription().getType().name())
                 .build();
     }
+
+    public boolean isMembership() {
+        return profileService.isMembership();
+    }
 }

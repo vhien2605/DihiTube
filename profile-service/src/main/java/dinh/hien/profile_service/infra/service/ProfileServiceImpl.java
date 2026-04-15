@@ -20,8 +20,19 @@ public class ProfileServiceImpl implements IProfileService {
     @Override
     public UserProfile readMyProfile() {
         String userId = SharedMethods.getUserIdFromSecurityContext();
+        System.out.println("userId: " + userId);
         JpaProfile profile = jpaProfileRepository.findByUserId(userId)
                 .orElseThrow(() -> new DomainException(DError.PROFILE_NOT_EXISTED));
         return ProfileMapper.toDomainProfile(profile);
+    }
+
+    // true if user is premium
+    @Override
+    public boolean isMembership() {
+        String userId = SharedMethods.getUserIdFromSecurityContext();
+        JpaProfile profile = jpaProfileRepository.findByUserId(userId)
+                .orElseThrow(() -> new DomainException(DError.PROFILE_NOT_EXISTED));
+
+        return profile.getSubscription().getType().equals("PREMIUM");
     }
 }

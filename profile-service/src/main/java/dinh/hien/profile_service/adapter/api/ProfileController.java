@@ -9,6 +9,7 @@ import dinh.hien.profile_service.application.usecase.readprofile.ReadProfileUseC
 import dinh.hien.profile_service.application.usecase.subscription.SubscriptionCheckoutUseCase;
 import dinh.hien.profile_service.application.usecase.update.UpdateProfileUseCase;
 import lombok.RequiredArgsConstructor;
+import org.apache.kafka.common.protocol.types.Field;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,6 +27,17 @@ public class ProfileController {
                 ApiSuccessResponse.<ProfileResponseDTO>builder()
                         .message("get profile")
                         .data(ProfileMapper.toReadProfileResponseDTO(result))
+                        .build();
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/is-membership")
+    public ResponseEntity<ApiSuccessResponse<Boolean>> isMembership() {
+        var result = readProfileUseCase.isMembership();
+        ApiSuccessResponse<Boolean> response =
+                ApiSuccessResponse.<Boolean>builder()
+                        .message("is premium")
+                        .data(result)
                         .build();
         return ResponseEntity.ok(response);
     }

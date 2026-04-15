@@ -1,0 +1,72 @@
+package com.pm.streamingservice.adapter.exception;
+
+
+import com.pm.streamingservice.adapter.dto.response.ApiErrorResponse;
+import com.pm.streamingservice.domain.exception.DomainException;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
+
+import java.util.Map;
+
+
+@RestControllerAdvice
+@Slf4j
+public class GlobalExceptionHandler {
+    private static final Map<Integer, HttpStatus> httpStatusMap = Map.of(
+            1000, HttpStatus.BAD_REQUEST,
+            1001, HttpStatus.BAD_REQUEST,
+            1002, HttpStatus.BAD_REQUEST,
+            1003, HttpStatus.BAD_REQUEST,
+            1004, HttpStatus.INTERNAL_SERVER_ERROR,
+            1005, HttpStatus.INTERNAL_SERVER_ERROR
+    );
+
+
+    @ExceptionHandler({DomainException.class})
+    public ResponseEntity handleAppException(DomainException e, WebRequest request) {
+        log.info("---------------------------Domain exception handler start---------------------------");
+        HttpStatus status = httpStatusMap.get(e.getDError().getCode());
+        return ResponseEntity.status(status)
+                .body(
+                        ApiErrorResponse.builder()
+                                .error(e.getDError().name())
+                                .message(e.getDError().getMessage())
+                                .path(request.getDescription(false))
+                                .build()
+                );
+    }
+
+
+    @ExceptionHandler({AccessDeniedException.class})
+    public ResponseEntity handleAccessDeniedException(AccessDeniedException e, WebRequest request) {
+        log.info("---------------------------Access denied exception handler start---------------------------");
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(
+                        ApiErrorResponse.builder()
+                                .error(HttpStatus.FORBIDDEN.name())
+                                .message(e.getMessage())
+                                .path(request.getDescription(false))
+                                .build()
+                );
+    }
+
+
+    @ExceptionHandler({Exception.class})
+    public ResponseEntity handleGeneralException(Exception e, WebRequest request) {
+        log.info("---------------------------general exception handler start---------------------------");
+        e.printStackTrace();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(
+                        ApiErrorResponse.builder()
+                                .error(HttpStatus.INTERNAL_SERVER_ERROR.name())
+                                .message(e.getMessage())
+                                .path(request.getDescription(false))
+                                .build()
+                );
+    }
+}

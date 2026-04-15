@@ -1,4 +1,4 @@
-package dinh.hien.file_service.infra.exception;
+package com.pm.streamingservice.infra.exception;
 
 
 import lombok.Getter;
@@ -12,7 +12,8 @@ public enum InfraError {
     FAIL_GENERATE_LINK(1004, "fail to generate link"),
     FILE_SERVER_BUCKET_ERROR(1005, "File server bucket error"),
     FILE_NOT_FOUND(1006, "File not found"),
-    GET_PRESIGNED_ERROR(1007, "Get presigned url error"),;
+    PERMISSION_DENIED(1007, "Permission denied for this action"),;
+
     private final int code;
     private final String message;
 }
