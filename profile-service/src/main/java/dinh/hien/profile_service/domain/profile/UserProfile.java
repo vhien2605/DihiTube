@@ -32,4 +32,11 @@ public class UserProfile {
     public void updateSubscription(Subscription subscription) {
         this.subscription = subscription;
     }
+
+
+    public void profileUpdate(String displayName, String avatarUrl, PhoneNumber phoneNumber) {
+        this.displayName = displayName;
+        this.avatarUrl = avatarUrl;
+        this.phoneNumber = phoneNumber;
+    }
 }
