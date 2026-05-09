@@ -60,43 +60,156 @@ DihiTube/
 identity-service/
 ├── src/main/java/dinh/hien/identity_service/
 │
-│   ├── domain/                        # Core business logic
-│   │   ├── user/                      # User aggregate
-│   │   │   ├── User.java              # Domain entity
-│   │   │   ├── UserId.java            # Value object
-│   │   │   ├── UserRepository.java    # Repository interface
-│   │   │   └── exception/             # Domain exceptions
-│   │   │
-│   │   └── authentication/            # Authentication aggregate
+│   ├── IdentityServiceApplication.java
 │
-│   ├── application/                   # Application layer
-│   │   ├── usecase/                   # Use cases
-│   │   │   ├── auth/                  # Authentication use cases
-│   │   │   │   ├── LoginUseCase.java
-│   │   │   │   ├── RegisterUseCase.java
-│   │   │   │   ├── IntrospectUseCase.java
-│   │   │   │   └── RefreshTokenUseCase.java
-│   │   │   │
-│   │   │   └── user/                  # User use cases
+│   ├── domain/                                      # Domain Layer
+│   │
+│   │   ├── exception/
+│   │   │   ├── DError.java
+│   │   │   └── DomainException.java
 │   │   │
-│   │   └── dto/                       # Data transfer objects
+│   │   ├── role/
+│   │   │   ├── IRoleRepository.java
+│   │   │   ├── Role.java
+│   │   │   └── RoleId.java
+│   │   │
+│   │   └── user/
+│   │       ├── Email.java
+│   │       ├── IUserRepository.java
+│   │       ├── Password.java
+│   │       ├── PasswordHasher.java
+│   │       ├── User.java
+│   │       ├── UserId.java
+│   │       └── event/
+│   │           └── UserCreatedEvent.java
 │
-│   ├── adapter/                       # Driving adapters
-│   │   ├── api/                       # REST controllers
-│   │   │   ├── AuthController.java
-│   │   │   └── UserController.java
+│   ├── application/                                 # Application Layer
+│   │
+│   │   ├── external/
+│   │   │   └── publisher/
+│   │   │       └── UserEventPublisher.java
 │   │   │
-│   │   ├── dto/                       # Request/Response DTOs
+│   │   ├── service/
+│   │   │   └── token/
+│   │   │       ├── ITokenRepository.java
+│   │   │       ├── ITokenService.java
+│   │   │       ├── TokenPayload.java
+│   │   │       ├── TokenProperties.java
+│   │   │       └── TokenType.java
+│   │   │
+│   │   └── usecase/
+│   │       ├── introspect/
+│   │       │   ├── IntrospectCommand.java
+│   │       │   ├── IntrospectResult.java
+│   │       │   └── IntrospectUseCase.java
+│   │       │
+│   │       ├── login/
+│   │       │   ├── LoginCommand.java
+│   │       │   ├── LoginResult.java
+│   │       │   └── UserLoginUseCase.java
+│   │       │
+│   │       ├── logout/
+│   │       │   ├── LogoutCommand.java
+│   │       │   └── LogoutUseCase.java
+│   │       │
+│   │       ├── password/
+│   │       │   ├── ChangePasswordCommand.java
+│   │       │   └── ChangePasswordUseCase.java
+│   │       │
+│   │       ├── refresh/
+│   │       │   ├── RefreshCommand.java
+│   │       │   ├── RefreshResult.java
+│   │       │   └── UserTokenRefreshUseCase.java
+│   │       │
+│   │       └── register/
+│   │           ├── FailCommand.java
+│   │           ├── ProfileCreatedFailUseCase.java
+│   │           ├── RegisterCommand.java
+│   │           ├── RegisterResult.java
+│   │           └── UserRegisterUseCase.java
+│
+│   ├── adapter/                                     # Adapter Layer
+│   │
+│   │   ├── api/
+│   │   │   └── AuthController.java
+│   │   │
+│   │   ├── dto/
 │   │   │   ├── request/
+│   │   │   │   ├── ChangePasswordRequestDTO.java
+│   │   │   │   ├── IntrospectRequestDTO.java
+│   │   │   │   ├── LoginRequestDTO.java
+│   │   │   │   ├── RefreshRequestDTO.java
+│   │   │   │   └── RegisterRequestDTO.java
+│   │   │   │
 │   │   │   └── response/
+│   │   │       ├── ApiErrorResponse.java
+│   │   │       ├── ApiResponse.java
+│   │   │       ├── ApiSuccessResponse.java
+│   │   │       └── auth/
+│   │   │           ├── IntrospectResponseDTO.java
+│   │   │           ├── JwtResponseDTO.java
+│   │   │           └── RefreshResponseDTO.java
 │   │   │
-│   │   └── exception/                 # Exception handlers
+│   │   ├── exception/
+│   │   │   └── GlobalExceptionHandler.java
+│   │   │
+│   │   ├── mapper/
+│   │   │   └── AuthMapper.java
+│   │   │
+│   │   └── messaging/
+│   │       ├── event/
+│   │       │   └── UserProfileCreatedFailEvent.java
+│   │       └── listener/
+│   │           └── UserKafkaListener.java
 │
-│   └── infra/                         # Driven adapters
-│       ├── config/                    # Configuration classes
-│       ├── persistence/               # Repository implementations
-│       ├── service/                   # External service implementations
-│       └── exception/                 # Infrastructure exceptions
+│   └── infra/                                       # Infrastructure Layer
+│       │
+│       ├── config/
+│       │   ├── CustomJwtDecoder.java
+│       │   ├── SecurityConfig.java
+│       │   └── authHandlers/
+│       │       ├── CustomAccessDeniedHandler.java
+│       │       └── CustomAuthenticationEntryPoint.java
+│       │
+│       ├── exception/
+│       │   ├── AuthException.java
+│       │   ├── InfraError.java
+│       │   └── InfraException.java
+│       │
+│       ├── external/
+│       │   └── messaging/
+│       │       ├── event/
+│       │       │   └── KafkaUserCreatedEvent.java
+│       │       └── publisher/
+│       │           └── UserEventPublisherImpl.java
+│       │
+│       ├── mapper/
+│       │   ├── RoleMapper.java
+│       │   ├── UserMapper.java
+│       │   └── event/
+│       │       └── UserEventMapper.java
+│       │
+│       ├── model/
+│       │   ├── AccessToken.java
+│       │   ├── JpaRole.java
+│       │   ├── JpaUser.java
+│       │   └── RefreshToken.java
+│       │
+│       ├── persistence/
+│       │   ├── impl/
+│       │   │   ├── RoleRepositoryImpl.java
+│       │   │   ├── TokenRepositoryImpl.java
+│       │   │   └── UserRepositoryImpl.java
+│       │   │
+│       │   └── repository/
+│       │       ├── JpaRefreshTokenRepository.java
+│       │       ├── RedisAccessRepository.java
+│       │       ├── RoleJpaRepository.java
+│       │       └── UserJpaRepository.java
+│       │
+│       └── service/
+│           ├── PasswordHasherImpl.java
+│           └── TokenServiceImpl.java
 │
 └── src/main/resources/
     └── application.yml
